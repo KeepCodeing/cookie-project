@@ -11,7 +11,7 @@
           <v-container fluid>
             <v-row>
               <v-col
-                v-for="idx in 40"
+                v-for="idx in 20"
                 :key="idx"
                 class="d-flex child-flex"
                 cols="2"
@@ -74,7 +74,7 @@
         </v-card>
       </v-col>
       <v-col cols="12">
-        <Pagination />
+        <Pagination :limit="20" :length="100" />
       </v-col>
     </v-row>
     <!--  查看图片对话框  -->
@@ -85,13 +85,15 @@
          width="500px"
          flat
          tile
+         v-if="dialogData.sid !== undefined"
        >
          <v-img
            :src="dialogData.download_url"
-           :lazy-src="loadingImage"
            aspect-ratio="1"
            class="grey lighten-2"
+           :lazy-src="'https://lohas.nicoseiga.jp/thumb/' + dialogData.sid.replace('im', '') + 'i'"
          >
+            <!--      :lazy-src="'https://lohas.nicoseiga.jp/thumb/' + dialogData.sid.replace('im', '') + 'i'"     -->
            <template v-slot:placeholder>
              <v-row
                class="fill-height ma-0"
@@ -157,7 +159,6 @@
     data: () => ({
       dialog: false,
       dialogData: {},
-      loadingImage: require('../assets/logo.png'),
       listProps: [
         { prop: 'user_name', title: '作者' },
         { prop: 'title', title: '标题' },
@@ -171,6 +172,7 @@
     methods: {
       showDialog(item) {
         this.dialog = true;
+        this.dialogData = {};
         this.dialogData = item;
       },
       jump_tab(tab) {
@@ -193,7 +195,7 @@
     },
 
     created() {
-      this.$store.dispatch(GET_PAGE_IMAGES, { page: 1 });
+      this.$store.dispatch(GET_PAGE_IMAGES, { page: 1, limit: 20 });
     }
   }
 </script>

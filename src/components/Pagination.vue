@@ -34,6 +34,11 @@
         type: Number,
         required: false,
         default: 50,
+      },
+      limit: {
+        type: Number,
+        required: false,
+        default: 20,
       }
     },
     data() {
@@ -43,7 +48,8 @@
     },
     watch: {
       page(val) {
-        this.$store.dispatch(GET_PAGE_IMAGES, { page: val });
+        this.$store.state.images = [];
+        this.$store.dispatch(GET_PAGE_IMAGES, { page: val, limit: this.limit });
       }
     }
   }
