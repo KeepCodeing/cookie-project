@@ -9,7 +9,7 @@ let config = {
   // withCredentials: true, // Check cross-site Access-Control
   baseURL: process.env.NODE_ENV === "development" ? '/api' : 'http://bingtu-api.herokuapp.com'
 };
-
+console.log(process.env.NODE_ENV);
 
 
 const _axios = axios.create(config);
