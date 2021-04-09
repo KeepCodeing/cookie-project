@@ -7,8 +7,10 @@ let config = {
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
   // timeout: 60 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
-  baseURL: '/api'
+  baseURL: process.env.NODE_ENV === "development" ? '/api' : 'http://bingtu-api.herokuapp.com'
 };
+
+
 
 const _axios = axios.create(config);
 
@@ -54,4 +56,4 @@ Plugin.install = function(Vue, options) {
 
 Vue.use(Plugin);
 
-export default Plugin;
+export default _axios;
