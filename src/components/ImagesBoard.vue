@@ -198,7 +198,6 @@
         }
       },
       checkUrl(dialogData) {
-        console.log(dialogData);
         if (dialogData.cdn_url !== "" && !dialogData.cdn_url.endsWith('.text/html'))
           return dialogData.cdn_url;
         return dialogData.source_url;
