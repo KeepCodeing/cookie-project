@@ -14,7 +14,8 @@
                 v-for="idx in 20"
                 :key="idx"
                 class="d-flex child-flex"
-                cols="2"
+                :cols="6"
+                :md="2"
               >
                 <v-skeleton-loader
                   class="mx-auto"
@@ -28,7 +29,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <!--  栅格图片  -->
+    <!--  栅格图片，此处展示的是缩略图  -->
     <v-row justify="center">
       <v-col cols="11">
         <v-card
@@ -42,7 +43,8 @@
                 v-for="(item, idx) in images_store"
                 :key="idx"
                 class="d-flex child-flex"
-                cols="2"
+                :cols="6"
+                :md="2"
               >
                 <v-card
                   tile
@@ -52,11 +54,11 @@
                   @click="showDialog(item)"
                 >
                   <v-img
-                    :src="item.download_url"
-                    :lazy-src="'https://lohas.nicoseiga.jp/thumb/' + item.sid.replace('im', '') + 'i'"
+                    :src="'https://lohas.nicoseiga.jp/thumb/' + item.sid + 'i'"
                     aspect-ratio="1"
                     class="grey lighten-2"
                   >
+                    <!-- :lazy-src="'https://lohas.nicoseiga.jp/thumb/' + item.sid + 'i'"-->
                     <template v-slot:placeholder>
                       <v-row
                         class="fill-height ma-0"
@@ -79,21 +81,30 @@
     </v-row>
     <!--  查看图片对话框  -->
     <v-dialog v-model="dialog" width="800px">
-      <v-row no-gutters class="white">
+      <v-row no-gutters class="white" style="position: relative;">
+       <div style="position: absolute; right: 5px; top: 5px; z-index: 100">
+         <v-btn
+           fab
+           depressed
+           color="grey"
+           class="black--text font-weight-thin hidden-md-and-up"
+           style="opacity: 0.3; font-size: 20px; height: 35px; width: 35px;"
+           @click="dialog = false"
+         >X</v-btn>
+       </div>
        <v-card
          class="d-flex"
          width="500px"
          flat
          tile
-         v-if="dialogData.sid !== undefined"
        >
          <v-img
-           :src="dialogData.download_url"
+           v-if="dialog"
+           :src="checkUrl(dialogData)"
            aspect-ratio="1"
            class="grey lighten-2"
-           :lazy-src="'https://lohas.nicoseiga.jp/thumb/' + dialogData.sid.replace('im', '') + 'i'"
+           :lazy-src="'https://lohas.nicoseiga.jp/thumb/' + dialogData.sid + 'i'"
          >
-            <!--      :lazy-src="'https://lohas.nicoseiga.jp/thumb/' + dialogData.sid.replace('im', '') + 'i'"     -->
            <template v-slot:placeholder>
              <v-row
                class="fill-height ma-0"
@@ -160,19 +171,19 @@
       dialog: false,
       dialogData: {},
       listProps: [
-        { prop: 'user_name', title: '作者' },
+        { prop: 'username', title: '作者' },
         { prop: 'title', title: '标题' },
-        { prop: 'description', title: '描述' },
+        { prop: 'description', title: '简介' },
         { prop: 'sid', title: '静画id' },
+        { prop: 'created', title: '投稿时间' },
         { prop: 'tags', title: '标签' },
       ],
-      colorList: ['indigo', 'orange', 'primary', 'green', 'teal']
+      colorList: ['indigo', 'orange', 'primary', 'green', 'teal'],
     }),
 
     methods: {
       showDialog(item) {
         this.dialog = true;
-        this.dialogData = {};
         this.dialogData = item;
       },
       jump_tab(tab) {
@@ -181,10 +192,16 @@
       jumpNewTab(item) {
         let url = 'https://seiga.nicovideo.jp';
         if (this.jump_tab(item.prop)) {
-          if (item.prop === 'sid') url += '/seiga/' + this.dialogData['sid'];
-          else url += this.dialogData['user_link'];
+          if (item.prop === 'sid') url += '/seiga/im' + this.dialogData['sid'];
+          else url += '/user/illust/' + this.dialogData['user_id'];
           window.open(url, '_bank');
         }
+      },
+      checkUrl(dialogData) {
+        console.log(dialogData);
+        if (dialogData.cdn_url !== "" && !dialogData.cdn_url.endsWith('.text/html'))
+          return dialogData.cdn_url;
+        return dialogData.source_url;
       }
     },
 

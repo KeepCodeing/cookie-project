@@ -17,7 +17,7 @@ export default new Vuex.Store({
   actions: {
     [GET_PAGE_IMAGES](context, payload) {
       axios({
-        url: '/bingtu?pn=' + payload['page'] + '&limit=' + payload['limit'],
+        url: '/illust?pn=' + payload['page'] + '&limit=' + payload['limit'],
         method: 'get'
       }).then(res => context.commit(LOAD_PAGE_IMAGES, res.data));
     }
