@@ -11,7 +11,7 @@
           <v-container fluid>
             <v-row>
               <v-col
-                v-for="idx in 20"
+                v-for="idx in pagesLimit"
                 :key="idx"
                 class="d-flex child-flex"
                 :cols="6"
@@ -59,15 +59,15 @@
                     class="grey lighten-2"
                   >
                     <!-- :lazy-src="'https://lohas.nicoseiga.jp/thumb/' + item.sid + 'i'"-->
-                    <template v-slot:placeholder>
-                      <v-row
-                        class="fill-height ma-0"
-                        align="center"
-                        justify="center"
-                      >
-                        <v-progress-circular indeterminate color="grey lighten-5" />
-                      </v-row>
-                    </template>
+<!--                    <template v-slot:placeholder>-->
+<!--                      <v-row-->
+<!--                        class="fill-height ma-0"-->
+<!--                        align="center"-->
+<!--                        justify="center"-->
+<!--                      >-->
+<!--                        <v-progress-circular indeterminate color="grey lighten-5" />-->
+<!--                      </v-row>-->
+<!--                    </template>-->
                   </v-img>
                 </v-card>
               </v-col>
@@ -75,8 +75,33 @@
           </v-container>
         </v-card>
       </v-col>
-      <v-col cols="12">
-        <Pagination :limit="20" :length="100" />
+      <v-col cols="3" v-show="total_pages > 1" class="px-2">
+        <Pagination :limit="pagesLimit" :length="total_pages" :page="jumpPage" />
+      </v-col>
+      <v-col cols="1" class="px-0 pr-2 text-right hidden-sm-and-down" v-show="total_pages > 1">
+        <v-btn
+          depressed
+          rounded
+          outlined
+          color="grey darken-3"
+          height="40"
+          @click="jumpPage = Number(page) > total_pages || Number(page) < 1 ? jumpPage : Number(page)"
+        >
+          跳转
+        </v-btn>
+      </v-col>
+      <v-col cols="1" class="px-0 hidden-sm-and-down" v-show="total_pages > 1">
+        <v-text-field
+          solo
+          flat
+          rounded
+          outlined
+          color="indigo"
+          dense
+          :rules="[rules.required]"
+          type="number"
+          v-model="page"
+        />
       </v-col>
     </v-row>
     <!--  查看图片对话框  -->
@@ -104,16 +129,17 @@
            aspect-ratio="1"
            class="grey lighten-2"
            :lazy-src="'https://lohas.nicoseiga.jp/thumb/' + dialogData.sid + 'i'"
+           contain
          >
-           <template v-slot:placeholder>
-             <v-row
-               class="fill-height ma-0"
-               align="center"
-               justify="center"
-             >
-               <v-progress-circular indeterminate color="grey lighten-5" />
-             </v-row>
-           </template>
+<!--           <template v-slot:placeholder>-->
+<!--             <v-row-->
+<!--               class="fill-height ma-0"-->
+<!--               align="center"-->
+<!--               justify="center"-->
+<!--             >-->
+<!--               <v-progress-circular indeterminate color="grey lighten-5" />-->
+<!--             </v-row>-->
+<!--           </template>-->
          </v-img>
        </v-card>
        <v-card
@@ -161,7 +187,7 @@
 
 <script>
   import Pagination from "./Pagination";
-  import { GET_PAGE_IMAGES } from "../store/type";
+  import {GET_PAGE_IMAGES, GET_TOTAL_PAGES} from "../store/type";
   import { mapState } from 'vuex'
 
   export default {
@@ -179,6 +205,12 @@
         { prop: 'tags', title: '标签' },
       ],
       colorList: ['indigo', 'orange', 'primary', 'green', 'teal'],
+      pagesLimit: 20,
+      rules: {
+        required: value => !!value || '页数我忘记了啊!',
+      },
+      jumpPage: 1,
+      page: 1,
     }),
 
     methods: {
@@ -187,7 +219,7 @@
         this.dialogData = item;
       },
       jump_tab(tab) {
-        return tab === 'user_name' || tab === 'sid';
+        return tab === 'username' || tab === 'sid';
       },
       jumpNewTab(item) {
         let url = 'https://seiga.nicovideo.jp';
@@ -207,16 +239,18 @@
     computed: {
       ...mapState({
         images_store: state => state.images,
+        total_pages: state => state.totalPages,
       })
     },
 
     created() {
-      this.$store.dispatch(GET_PAGE_IMAGES, { page: 1, limit: 20 });
+      this.$store.dispatch(GET_PAGE_IMAGES, { page: 1, limit: this.pagesLimit });
+      this.$store.dispatch(GET_TOTAL_PAGES, { limit: this.pagesLimit });
     }
   }
 </script>
 
-<style scoped>
+<style>
 .transition-animate:hover {
   transition: 0.2s;
   transform: translateY(-3%);
@@ -225,5 +259,8 @@
   white-space:normal;
   word-break:break-all;
   word-wrap:break-word;
+}
+.v-image__image--preload {
+  filter: blur(0) !important;
 }
 </style>

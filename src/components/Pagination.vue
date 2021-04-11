@@ -39,11 +39,11 @@
         type: Number,
         required: false,
         default: 20,
-      }
-    },
-    data() {
-      return {
-        page: 1,
+      },
+      page: {
+        type: Number,
+        required: false,
+        default: 1,
       }
     },
     watch: {
