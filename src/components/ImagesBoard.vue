@@ -68,7 +68,7 @@
       <v-col cols="3" v-show="total_pages > 1" class="px-2">
         <Pagination
           ref="pagination"
-          :totalVisible="10"
+          :totalVisible="6"
           :limit="pagesLimit"
           :length="total_pages"
         />
