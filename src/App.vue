@@ -21,3 +21,7 @@ export default {
   },
 };
 </script>
+
+<style>
+@import '../src/assets/CSS/scrollbar.css';
+</style>

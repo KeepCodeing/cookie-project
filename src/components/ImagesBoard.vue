@@ -66,7 +66,12 @@
         </v-card>
       </v-col>
       <v-col cols="3" v-show="total_pages > 1" class="px-2">
-        <Pagination ref="pagination" :limit="pagesLimit" :length="total_pages" />
+        <Pagination
+          ref="pagination"
+          :totalVisible="10"
+          :limit="pagesLimit"
+          :length="total_pages"
+        />
       </v-col>
       <v-col cols="1" class="px-0 pl-2 hidden-sm-and-down" v-show="total_pages > 1">
         <v-text-field
@@ -131,6 +136,7 @@
          flat
          class="hidden-sm-and-down"
          width="300px"
+         style="overflow-y: scroll; overflow-x: hidden; height: 500px;"
        >
          <v-row
            class="fill-height"
@@ -139,7 +145,7 @@
            no-gutters
            dense
          >
-            <v-list width="300px">
+            <v-list>
               <v-list-item v-for="(item, idx) in listProps" :key="idx">
                 <v-list-item-content>
                   <v-list-item-title>{{ item.title }}</v-list-item-title>
@@ -287,9 +293,9 @@
   transform: translateY(-3%);
 }
 .text-div {
-  white-space:normal;
-  word-break:break-all;
-  word-wrap:break-word;
+  white-space:normal !important;
+  word-break:break-all !important;
+  word-wrap:break-word !important;
 }
 .v-image__image--preload {
   filter: blur(0) !important;
