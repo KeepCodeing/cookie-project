@@ -58,16 +58,6 @@
                     aspect-ratio="1"
                     class="grey lighten-2"
                   >
-                    <!-- :lazy-src="'https://lohas.nicoseiga.jp/thumb/' + item.sid + 'i'"-->
-<!--                    <template v-slot:placeholder>-->
-<!--                      <v-row-->
-<!--                        class="fill-height ma-0"-->
-<!--                        align="center"-->
-<!--                        justify="center"-->
-<!--                      >-->
-<!--                        <v-progress-circular indeterminate color="grey lighten-5" />-->
-<!--                      </v-row>-->
-<!--                    </template>-->
                   </v-img>
                 </v-card>
               </v-col>
@@ -76,21 +66,9 @@
         </v-card>
       </v-col>
       <v-col cols="3" v-show="total_pages > 1" class="px-2">
-        <Pagination :limit="pagesLimit" :length="total_pages" :page="jumpPage" />
+        <Pagination ref="pagination" :limit="pagesLimit" :length="total_pages" />
       </v-col>
-      <v-col cols="1" class="px-0 pr-2 text-right hidden-sm-and-down" v-show="total_pages > 1">
-        <v-btn
-          depressed
-          rounded
-          outlined
-          color="grey darken-3"
-          height="40"
-          @click="jumpPage = Number(page) > total_pages || Number(page) < 1 ? jumpPage : Number(page)"
-        >
-          跳转
-        </v-btn>
-      </v-col>
-      <v-col cols="1" class="px-0 hidden-sm-and-down" v-show="total_pages > 1">
+      <v-col cols="1" class="px-0 pl-2 hidden-sm-and-down" v-show="total_pages > 1">
         <v-text-field
           solo
           flat
@@ -100,8 +78,20 @@
           dense
           :rules="[rules.required]"
           type="number"
-          v-model="page"
+          v-model="jumpPage"
         />
+      </v-col>
+      <v-col cols="1" class="px-0 pl-1 text-left hidden-sm-and-down" v-show="total_pages > 1">
+        <v-btn
+          depressed
+          rounded
+          outlined
+          color="grey darken-3"
+          height="40"
+          @click="jump(Number(jumpPage))"
+        >
+          跳转
+        </v-btn>
       </v-col>
     </v-row>
     <!--  查看图片对话框  -->
@@ -159,7 +149,7 @@
                     :style="{cursor: jump_tab(item.prop) ? 'pointer' : ''}"
                     :class="jump_tab(item.prop) ? 'blue--text lighten-3' : ''"
                     @click="jumpNewTab(item)"
-                  >{{ dialogData[item.prop] }}</v-list-item-subtitle>
+                  >{{ item.prop === 'sid' ? 'im' : '' }}{{ dialogData[item.prop] }}</v-list-item-subtitle>
                   <v-list-item-action-text v-else>
                     <v-chip
                       class="ma-1 my-2 white--text"
@@ -247,7 +237,6 @@
         required: value => !!value || '页数我忘记了啊!',
       },
       jumpPage: 1,
-      page: 1,
     }),
 
     methods: {
@@ -270,6 +259,11 @@
         if (dialogData.cdn_url !== "" && !dialogData.cdn_url.endsWith('.text/html'))
         return dialogData.cdn_url;
         return dialogData.source_url;
+      },
+
+      jump(jumpPage) {
+        if (jumpPage > this.total_pages || jumpPage < 1) return;
+        this.$refs['pagination']['page'] = jumpPage;
       }
     },
 
