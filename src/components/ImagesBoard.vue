@@ -300,9 +300,4 @@
 .v-image__image--preload {
   filter: blur(0) !important;
 }
-.blur_mask {
-  height: 100%;
-  width: 100%;
-  background: red;
-}
 </style>
