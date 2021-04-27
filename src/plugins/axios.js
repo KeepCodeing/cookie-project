@@ -7,9 +7,10 @@ let config = {
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
   // timeout: 60 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
-  baseURL: process.env.NODE_ENV === "development" ? '/api' : 'https://mysterious-river-25004.herokuapp.com'
+  baseURL: process.env.NODE_ENV === "development" ? '/api' : 'http://api.uzuki.ml/illust'
 };
 // https://fast-sands-51937.herokuapp.com/
+// https://mysterious-river-25004.herokuapp.com
 
 const _axios = axios.create(config);
 
