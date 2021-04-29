@@ -7,7 +7,7 @@ let config = {
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
   // timeout: 60 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
-  baseURL: process.env.NODE_ENV === "development" ? '/api' : 'https://uzuki.ml/api/illust '
+  baseURL: process.env.NODE_ENV === "development" ? '/api' : 'https://uzuki.ml/api/illust'
 };
 // https://fast-sands-51937.herokuapp.com/
 // https://mysterious-river-25004.herokuapp.com
