@@ -14,6 +14,11 @@
 
   export default {
     name: "Pagination",
+    data() {
+      return {
+        page: 1,
+      }
+    },
     props: {
       nextIcon: {
         type: String,
@@ -40,16 +45,18 @@
         required: false,
         default: 20,
       },
-      page: {
-        type: Number,
-        required: false,
-        default: 1,
-      }
     },
     watch: {
       page(val) {
         this.$store.state.images = [];
-        this.$store.dispatch(GET_PAGE_IMAGES, { page: val, limit: this.limit });
+        this.$store.dispatch(GET_PAGE_IMAGES, {
+          pn: val,
+          limit: this.limit ,
+          keyword: 'cookie☆ forever',
+          type: 'all',
+          join: 'OR',
+          order:'-created'
+        });
       }
     }
   }

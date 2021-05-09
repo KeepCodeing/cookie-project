@@ -20,11 +20,11 @@ export default new Vuex.Store({
   actions: {
     [GET_PAGE_IMAGES](context, payload) {
       axios({
-        url: '/search?' + object2arg(payload),
+        url: '/api/search?' + object2arg(payload),
         method: 'get'
       }).then(res => context.commit(LOAD_PAGE_IMAGES, {
         images: res.data.data,
-        total: res.data.total / payload['limit']
+        total: Math.ceil(res.data.total / payload['limit'])
       }));
     },
   },
