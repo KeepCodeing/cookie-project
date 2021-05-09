@@ -281,8 +281,15 @@
     },
 
     created() {
-      this.$store.dispatch(GET_PAGE_IMAGES, { page: 1, limit: this.pagesLimit });
-      this.$store.dispatch(GET_TOTAL_PAGES, { limit: this.pagesLimit });
+      this.$store.dispatch(GET_PAGE_IMAGES, {
+        page: 1,
+        limit: this.pagesLimit ,
+        keyword: 'cookie☆ forever',
+        type: 'all',
+        join: 'OR',
+        order:'-created'
+      });
+      // this.$store.dispatch(GET_TOTAL_PAGES, { limit: this.pagesLimit });
     }
   }
 </script>

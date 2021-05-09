@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {GET_PAGE_IMAGES, GET_TOTAL_PAGES, LOAD_PAGE_IMAGES, LOAD_TOTAL_PAGES} from "./type";
+import {GET_PAGE_IMAGES, LOAD_PAGE_IMAGES} from "./type";
 import axios from '../plugins/axios'
+import object2arg from "../utils/object2arg";
 
 Vue.use(Vuex);
 
@@ -12,25 +13,20 @@ export default new Vuex.Store({
   },
   mutations: {
     [LOAD_PAGE_IMAGES](state, res) {
-      state.images = res;
+      state.images = res.images;
+      state.totalPages = res.total;
     },
-    [LOAD_TOTAL_PAGES](state, res) {
-      state.totalPages = Math.ceil(res);
-    }
   },
   actions: {
     [GET_PAGE_IMAGES](context, payload) {
       axios({
-        url: '/illust?pn=' + payload['page'] + '&limit=' + payload['limit'],
+        url: '/search?' + object2arg(payload),
         method: 'get'
-      }).then(res => context.commit(LOAD_PAGE_IMAGES, res.data));
+      }).then(res => context.commit(LOAD_PAGE_IMAGES, {
+        images: res.data.data,
+        total: res.data.total / payload['limit']
+      }));
     },
-    [GET_TOTAL_PAGES](context, payload) {
-      axios({
-        url: '/total',
-        method: 'get'
-      }).then(res => context.commit(LOAD_TOTAL_PAGES, res.data.total / payload['limit'] ));
-    }
   },
   modules: {
   }
