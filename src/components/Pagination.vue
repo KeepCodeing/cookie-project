@@ -10,8 +10,6 @@
 </template>
 
 <script>
-  import {GET_PAGE_IMAGES} from "../store/type";
-
   export default {
     name: "Pagination",
     data() {
@@ -49,14 +47,15 @@
     watch: {
       page(val) {
         this.$store.state.images = [];
-        this.$store.dispatch(GET_PAGE_IMAGES, {
-          pn: val,
-          limit: this.limit ,
-          keyword: 'cookie☆ forever',
-          type: 'all',
-          join: 'OR',
-          order:'-created'
-        });
+        this.$emit('pageChanged', { page: val });
+        // this.$store.dispatch(GET_PAGE_IMAGES, {
+        //   pn: val,
+        //   limit: this.limit,
+        //   keyword: 'cookie☆ forever',
+        //   type: 'all',
+        //   join: 'OR',
+        //   order:'-created'
+        // });
       }
     }
   }

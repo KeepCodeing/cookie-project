@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <!--  加载骨架  -->
-    <v-row justify="center" v-if="!images_store.length">
+    <v-row justify="center" v-if="isLoading">
       <v-col cols="11">
         <v-card
           tile
@@ -15,11 +15,10 @@
                 :key="idx"
                 class="d-flex child-flex"
                 :cols="6"
-                :md="2"
+                :md="3"
               >
                 <v-skeleton-loader
                   class="mx-auto"
-                  max-width="200"
                   type="image"
                   :loading="true"
                 />
@@ -29,8 +28,14 @@
         </v-card>
       </v-col>
     </v-row>
+    <!--  空结果提示  -->
+    <v-container v-if="!isLoading && !images_store.length" class="fill-height">
+      <v-row justify="center" align="center">
+        <h3 class="title">（关键字）不是这样吧！</h3>
+      </v-row>
+    </v-container>
     <!--  栅格图片，此处展示的是缩略图  -->
-    <v-row justify="center">
+    <v-row justify="center" v-if="!isLoading">
       <v-col cols="11">
         <v-card
           tile
@@ -44,7 +49,7 @@
                 :key="idx"
                 class="d-flex child-flex"
                 :cols="6"
-                :md="2"
+                :md="3"
               >
                 <v-card
                   tile
@@ -64,39 +69,6 @@
             </v-row>
           </v-container>
         </v-card>
-      </v-col>
-      <v-col cols="3" v-show="total_pages > 1" class="px-2">
-        <Pagination
-          ref="pagination"
-          :totalVisible="6"
-          :limit="pagesLimit"
-          :length="total_pages"
-        />
-      </v-col>
-      <v-col cols="1" class="px-0 pl-2 hidden-sm-and-down" v-show="total_pages > 1">
-        <v-text-field
-          solo
-          flat
-          rounded
-          outlined
-          color="indigo"
-          dense
-          :rules="[rules.required]"
-          type="number"
-          v-model="jumpPage"
-        />
-      </v-col>
-      <v-col cols="1" class="px-0 pl-1 text-left hidden-sm-and-down" v-show="total_pages > 1">
-        <v-btn
-          depressed
-          rounded
-          outlined
-          color="grey darken-3"
-          height="40"
-          @click="jump(Number(jumpPage))"
-        >
-          跳转
-        </v-btn>
       </v-col>
     </v-row>
     <!--  查看图片对话框  -->
@@ -119,7 +91,6 @@
          tile
          v-if="dialog"
        >
-<!--         v-if="dialog"-->
          <v-img
            :src="'https://lohas.nicoseiga.jp/thumb/' + dialogData.sid + 'i'"
            aspect-ratio="1"
@@ -132,6 +103,7 @@
            contain
          />
        </v-card>
+        <!--    PC端查看窗口    -->
         <v-card
          flat
          class="hidden-sm-and-down"
@@ -148,7 +120,7 @@
             <v-list>
               <v-list-item v-for="(item, idx) in listProps" :key="idx">
                 <v-list-item-content>
-                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                  <v-list-item-title v-if="item.prop !== 'download'">{{ item.title }}</v-list-item-title>
                   <v-list-item-subtitle
                     class="text-div"
                     v-if="item.prop !== 'tags'"
@@ -156,23 +128,35 @@
                     :class="jump_tab(item.prop) ? 'blue--text lighten-3' : ''"
                     @click="jumpNewTab(item)"
                   >{{ item.prop === 'sid' ? 'im' : '' }}{{ dialogData[item.prop] }}</v-list-item-subtitle>
-                  <v-list-item-action-text v-else>
+                  <v-list-item-action-text v-if="item.prop === 'tags'">
                     <v-chip
                       class="ma-1 my-2 white--text"
+                      style="cursor: pointer;"
                       v-for="(item, idx) in dialogData[item.prop]"
                       :color="colorList[idx % colorList.length]"
                       :key="idx"
+                      @click="changedTagModel(item)"
                     >
                       <span
                         style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px"
                       >{{ item }}</span>
                     </v-chip>
                   </v-list-item-action-text>
+                  <v-list-item-content v-if="item.prop === 'download'">
+                    <v-btn
+                      depressed
+                      outlined
+                      color="red"
+                      @click="downloadImage()"
+                    >下载</v-btn>
+                  </v-list-item-content>
                 </v-list-item-content>
+
               </v-list-item>
             </v-list>
          </v-row>
        </v-card>
+        <!--    PE端查看窗口    -->
         <v-card
           flat
           class="hidden-md-and-up"
@@ -185,10 +169,10 @@
             no-gutters
             dense
           >
-            <v-list width="300px">
+            <v-list width="370px">
               <v-list-item v-for="(item, idx) in listProps" :key="idx">
                 <v-list-item-content>
-                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                  <v-list-item-title v-if="item.prop !== 'download'">{{ item.title }}</v-list-item-title>
                   <v-list-item-subtitle
                     class="text-div"
                     v-if="item.prop !== 'tags'"
@@ -196,18 +180,27 @@
                     :class="jump_tab(item.prop) ? 'blue--text lighten-3' : ''"
                     @click="jumpNewTab(item)"
                   >{{ dialogData[item.prop] }}</v-list-item-subtitle>
-                  <v-list-item-action-text v-else>
+                  <v-list-item-action-text v-if="item.prop === 'tags'">
                     <v-chip
                       class="ma-1 my-2 white--text"
                       v-for="(item, idx) in dialogData[item.prop]"
                       :color="colorList[idx % colorList.length]"
                       :key="idx"
+                      @click="changedTagModel(item)"
                     >
                       <span
                         style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px"
                       >{{ item }}</span>
                     </v-chip>
                   </v-list-item-action-text>
+                  <v-list-item-content v-if="item.prop === 'download'">
+                    <v-btn
+                      depressed
+                      outlined
+                      color="red"
+                      @click="downloadImage()"
+                    >下载</v-btn>
+                  </v-list-item-content>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
@@ -215,6 +208,25 @@
         </v-card>
      </v-row>
     </v-dialog>
+    <v-snackbar
+      v-model="snackbar"
+      color="success"
+      light
+      timeout="1700"
+    >
+      <span class="white--text">{{ downloadPrompt }}</span>
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="yellow"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+          class="font-weight-bold"
+        >
+          关闭
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -222,6 +234,7 @@
   import Pagination from "./Pagination";
   import {GET_PAGE_IMAGES, GET_TOTAL_PAGES} from "../store/type";
   import { mapState } from 'vuex'
+  import {download} from "../utils/download";
 
   export default {
     name: "ImagesBoard",
@@ -236,13 +249,12 @@
         { prop: 'sid', title: '静画id' },
         { prop: 'created', title: '投稿时间' },
         { prop: 'tags', title: '标签' },
+        { prop: 'download', title: '下载' }
       ],
       colorList: ['indigo', 'orange', 'primary', 'green', 'teal'],
       pagesLimit: 20,
-      rules: {
-        required: value => !!value || '页数我忘记了啊!',
-      },
-      jumpPage: 1,
+      snackbar: false,
+      downloadPrompt: '下载已开始，默认保存格式.png，打开不能请尝试其它后缀（小声）'
     }),
 
     methods: {
@@ -261,15 +273,20 @@
           window.open(url, '_bank');
         }
       },
+      changedTagModel(item) {
+        this.$emit('changedTagModel', { tag: item });
+        this.dialog = false;
+      },
       checkUrl(dialogData) {
         if (dialogData.cdn_url !== "" && !dialogData.cdn_url.endsWith('.text/html'))
         return dialogData.cdn_url;
         return dialogData.source_url;
       },
-
-      jump(jumpPage) {
-        if (jumpPage > this.total_pages || jumpPage < 1) return;
-        this.$refs['pagination']['page'] = jumpPage;
+      downloadImage() {
+        // console.log(this.dialogData);
+        this.snackbar = true;
+        download('im' + this.dialogData.sid, this.checkUrl(this.dialogData));
+        // download()
       }
     },
 
@@ -277,19 +294,9 @@
       ...mapState({
         images_store: state => state.images,
         total_pages: state => state.totalPages,
+        isLoading: state => state.isLoading,
       })
     },
-
-    created() {
-      this.$store.dispatch(GET_PAGE_IMAGES, {
-        pn: 1,
-        limit: this.pagesLimit ,
-        keyword: 'cookie☆ forever',
-        type: 'all',
-        join: 'OR',
-        order:'-created'
-      });
-    }
   }
 </script>
 
