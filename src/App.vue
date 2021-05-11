@@ -17,7 +17,7 @@
           @backNormalModel="backNormalModel"
           :isSearchModel="searchModel"
         />
-        <v-spacer />
+        <v-spacer v-show="searchModel" />
         <v-btn
           v-show="searchModel"
           tile
