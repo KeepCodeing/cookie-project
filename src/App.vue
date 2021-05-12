@@ -11,7 +11,7 @@
           @click="$refs['drawer']['drawer'] = true"
           class="hidden-md-and-up"
         />
-        <v-app-bar-title>Cookie Project</v-app-bar-title>
+        <v-app-bar-title>饼图站</v-app-bar-title>
         <SearchTab
           @switchSearchModel="switchSearchModel"
           @backNormalModel="backNormalModel"
@@ -119,14 +119,7 @@
             <v-btn
               color="primary"
               text
-              @click="() => {
-                    switchSearchModel({
-                      searchModel: searchTag,
-                      keyWords: keyWords.trimStart().trimEnd(),
-                      closeModel: closeModel,
-                    });
-                    searchDialog = false;
-              }"
+              @click="mobileSearch"
             >
               确定
             </v-btn>
@@ -137,13 +130,15 @@
   </v-app>
 </template>
 
-<script>
+<script>var searchDialog;
+
 import ImagesBoard from "./components/ImagesBoard";
 import SearchTab from "./components/SearchTab";
 import Pagination from "./components/Pagination";
 import {mapState} from "vuex";
 import {GET_PAGE_IMAGES, GET_SEARCH_PAGES} from "./store/type";
 import LeftDrawer from "./components/LeftDrawer";
+
 export default {
   name: 'App',
   components: {
@@ -191,14 +186,20 @@ export default {
       if (this.currentPage === this.normalPage) this.loadImages();
     },
     changedTagModel(args) {
+      // console.log(args);
       this.searchArgs['closeModel'] = true;
-      this.searchArgs['keyWords'] = args['tag'];
-      this.searchArgs['searchModel'] = '标签';
+      this.searchArgs['keyWords'] = args['keyWords'];
+      this.searchArgs['searchModel'] = args['searchModel'];
 
       this.switchSearchModel(this.searchArgs);
     },
     mobileSearch() {
       this.searchDialog = false;
+      this.switchSearchModel({
+        searchModel: this.searchTag,
+        keyWords: this.keyWords.trimStart().trimEnd(),
+        closeModel: this.closeModel,
+      });
     },
     loadImages() {
       if (this.searchModel) {
@@ -211,11 +212,11 @@ export default {
       } else {
         this.$store.dispatch(GET_PAGE_IMAGES, {
           pn: this.normalPage,
-          limit: this.pagesLimit ,
+          limit: this.pagesLimit,
           keyword: 'cookie☆ forever',
           type: 'all',
           join: 'OR',
-          order:'-created'
+          order: '-created'
         });
       }
     },

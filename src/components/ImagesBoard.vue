@@ -135,11 +135,21 @@
                       v-for="(item, idx) in dialogData[item.prop]"
                       :color="colorList[idx % colorList.length]"
                       :key="idx"
-                      @click="changedTagModel(item)"
+                      @click="changedTagModel({ keyWords: item, searchModel: '标签' })"
                     >
                       <span
                         style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px"
                       >{{ item }}</span>
+                    </v-chip>
+                    <v-chip
+                      class="ma-1 my-2 white--text"
+                      style="cursor: pointer;"
+                      color="red"
+                      @click="changedTagModel({ keyWords: dialogData['username'], searchModel: '用户名' })"
+                    >
+                      <span
+                        style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px"
+                      >{{ dialogData['username'] }}</span>
                     </v-chip>
                   </v-list-item-action-text>
                   <v-list-item-content v-if="item.prop === 'download'">
@@ -186,11 +196,21 @@
                       v-for="(item, idx) in dialogData[item.prop]"
                       :color="colorList[idx % colorList.length]"
                       :key="idx"
-                      @click="changedTagModel(item)"
+                      @click="changedTagModel({ keyWords: item, searchModel: '标签' })"
                     >
                       <span
                         style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px"
                       >{{ item }}</span>
+                    </v-chip>
+                    <v-chip
+                      class="ma-1 my-2 white--text"
+                      style="cursor: pointer;"
+                      color="red"
+                      @click="changedTagModel({ keyWords: dialogData['username'], searchModel: '用户名' })"
+                    >
+                      <span
+                        style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px"
+                      >{{ dialogData['username'] }}</span>
                     </v-chip>
                   </v-list-item-action-text>
                   <v-list-item-content v-if="item.prop === 'download'">
@@ -273,8 +293,8 @@
           window.open(url, '_bank');
         }
       },
-      changedTagModel(item) {
-        this.$emit('changedTagModel', { tag: item });
+      changedTagModel(args) {
+        this.$emit('changedTagModel', args);
         this.dialog = false;
       },
       checkUrl(dialogData) {
