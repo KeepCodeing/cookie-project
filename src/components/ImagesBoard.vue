@@ -141,16 +141,6 @@
                         style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px"
                       >{{ item }}</span>
                     </v-chip>
-                    <v-chip
-                      class="ma-1 my-2 white--text"
-                      style="cursor: pointer;"
-                      color="red"
-                      @click="changedTagModel({ keyWords: dialogData['username'], searchModel: '用户名' })"
-                    >
-                      <span
-                        style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px"
-                      >{{ dialogData['username'] }}</span>
-                    </v-chip>
                   </v-list-item-action-text>
                   <v-list-item-content v-if="item.prop === 'download'">
                     <v-btn
@@ -201,16 +191,6 @@
                       <span
                         style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px"
                       >{{ item }}</span>
-                    </v-chip>
-                    <v-chip
-                      class="ma-1 my-2 white--text"
-                      style="cursor: pointer;"
-                      color="red"
-                      @click="changedTagModel({ keyWords: dialogData['username'], searchModel: '用户名' })"
-                    >
-                      <span
-                        style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px"
-                      >{{ dialogData['username'] }}</span>
                     </v-chip>
                   </v-list-item-action-text>
                   <v-list-item-content v-if="item.prop === 'download'">

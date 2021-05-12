@@ -84,12 +84,12 @@
     name: "SearchTab",
     data() {
       return {
-        items: ['用户名', '标签', '静画id'],
+        items: ['标签', '静画id'],
         closeModel: true,
         searchModel: '标签',
         keyWords: '',
         helpInfo: `按id查询静画可以省去im前缀;使用tag查询只用输入xx姐贵
-        即可（作者、id使用并集查询，tag使用交集查询）;点击tag查看相应饼图`
+        即可（d使用并集查询，tag使用交集查询）;点击tag查看相应饼图`
       }
     },
     methods: {

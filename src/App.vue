@@ -17,7 +17,7 @@
           @backNormalModel="backNormalModel"
           :isSearchModel="searchModel"
         />
-        <v-spacer v-show="searchModel" />
+        <v-spacer v-show="searchModel" class="hidden-md-and-up" />
         <v-btn
           v-show="searchModel"
           tile
@@ -130,7 +130,7 @@
   </v-app>
 </template>
 
-<script>var searchDialog;
+<script>
 
 import ImagesBoard from "./components/ImagesBoard";
 import SearchTab from "./components/SearchTab";
@@ -157,7 +157,7 @@ export default {
       searchArgs: {},
       jumpPage: 1,
       searchDialog: false,
-      items: ['用户名', '标签', '静画id'],
+      items: ['标签', '静画id'],
       closeModel: true,
       searchTag: '标签',
       keyWords: '',
