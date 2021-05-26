@@ -232,7 +232,6 @@
 
 <script>
   import Pagination from "./Pagination";
-  import {GET_PAGE_IMAGES, GET_TOTAL_PAGES} from "../store/type";
   import { mapState } from 'vuex'
   import {download} from "../utils/download";
 
