@@ -31,7 +31,7 @@
     <!--  空结果提示  -->
     <v-container v-if="!isLoading && !images_store.length" class="fill-height">
       <v-row justify="center" align="center">
-        <h3 class="title">（关键字）不是这样吧！</h3>
+        <h3 class="title">无数据，请检查关键字。</h3>
       </v-row>
     </v-container>
     <!--  栅格图片，此处展示的是缩略图  -->
@@ -149,6 +149,14 @@
                       color="red"
                       @click="downloadImage()"
                     >下载</v-btn>
+
+                    <v-btn
+                      depressed
+                      outlined
+                      color="red"
+                      style="margin-top: 10px"
+                      @click="openNewTab(checkUrl(dialogData))"
+                    >查看原图</v-btn>
                   </v-list-item-content>
                 </v-list-item-content>
 
@@ -257,6 +265,9 @@
     }),
 
     methods: {
+      openNewTab(url){
+        window.open(url);
+      },
       showDialog(item) {
         this.dialog = true;
         this.dialogData = item;
