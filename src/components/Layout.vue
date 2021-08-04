@@ -1,7 +1,7 @@
 <template>
     <div>
         <Header />
-        <thumb-image-container />
+        <thumb-image-container style="margin-top: 10px;" />
     </div>
 </template>
 
