@@ -3,6 +3,7 @@
     <div class="grid h-full grid-cols-7 grid-rows-2 md:grid-rows-1">
       <!-- 输入框 -->
       <input
+        v-model="search_data.keyword"
         class="
           col-span-4
           mr-2
@@ -28,13 +29,13 @@
         "
       >
         <button
-          @click="choose_tag = true"
-          :class="{ button_active: choose_tag }"
+          @click="search_data.tag = true"
+          :class="{ button_active: search_data.tag }"
           class="
             inline-flex
             items-center
             transition-colors
-            duration-300
+            duration-100
             ease-in
             focus:outline-none
             hover:text-blue-400
@@ -64,13 +65,13 @@
           <span>标签</span>
         </button>
         <button
-          @click="choose_tag = false"
-          :class="{ button_active: !choose_tag }"
+          @click="search_data.tag = false"
+          :class="{ button_active: !search_data.tag }"
           class="
             inline-flex
             items-center
             transition-colors
-            duration-300
+            duration-100
             ease-in
             focus:outline-none
             hover:text-blue-400
@@ -104,6 +105,7 @@
       </div>
       <!-- 搜索 -->
       <button
+        @click="commitSearch"
         class="
           col-span-1
           ml-2
@@ -126,12 +128,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, reactive } from "vue";
+import { useStore } from "vuex";
+import { GlobalProp, SearchProp } from '../store/props'
+import { SEARCH_PROP_UPDATE } from '../store/type'
+import { showMessageBox } from '../utils/utils'
 
 export default defineComponent({
   setup() {
+    const store = useStore<GlobalProp>();
+    const search_data: SearchProp = reactive({
+        keyword: '',
+        tag: true,
+    });
+
+    const commitSearch = () => {
+        store.commit(SEARCH_PROP_UPDATE, { search_data });
+        showMessageBox({ type: '成功', message: '成功搜索xx标签/编号的静画', timeout: 1500, show: true }, store);
+    }
+
     return {
-      choose_tag: ref(true),
+      search_data,
+      commitSearch,
     };
   },
 });

@@ -1,20 +1,24 @@
 import { createStore } from 'vuex'
-import { GET_PAGE_IMAGE, LOAD_PAGE_IMAGE } from './type'
+import { SEARCH_PROP_UPDATE, SHOW_MESSAGE_BOX } from './type'
+import {  GlobalProp } from './props'
 import axios from '../plugins/axios'
 
-export default createStore({
+export default createStore<GlobalProp>({
   state: {
-    imageUrl: ''
+    search_prop: { keyword: '', tag: true },
+    message_box_prop: { type: '成功', show: false, timeout: 1500, message: '' }
   },
   mutations: {
-    [LOAD_PAGE_IMAGE](state, payload) {
-      state.imageUrl = payload;
+    [SEARCH_PROP_UPDATE](state, { search_data }) {
+      state.search_prop = search_data;
+    },
+    [SHOW_MESSAGE_BOX](state, payload) {
+      state.message_box_prop = payload;
+      setTimeout(() => state.message_box_prop.show = false, payload.timeout)
     }
   },
   actions: {
-    [GET_PAGE_IMAGE]({ commit }) {
-      axios.get('/random').then(res => commit(LOAD_PAGE_IMAGE, res.data.message));
-    }
+
   },
   modules: {
   }

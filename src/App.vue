@@ -1,17 +1,23 @@
 <template>
   <div class="h-full">
     <layout />
+    <teleport to="#message_box">
+      <message-box />
+    </teleport>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import Layout from './components/Layout.vue'
+import MessageBox from './components/MessageBox.vue'
+import { createMessageBoxContainer } from './utils/utils'
 
 export default defineComponent({
-  components: { Layout },
+  components: { Layout, MessageBox },
   setup () {
 
+    createMessageBoxContainer();
     return {}
   }
 })
