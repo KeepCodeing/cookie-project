@@ -15,12 +15,12 @@ export default new Vuex.Store({
   mutations: {
     [LOAD_PAGE_IMAGES](state, res) {
       state.images = res.images;
-      state.totalPages = res.count;
+      state.totalPages = res.total;
       state.isLoading = false;
     },
     [LOAD_SEARCH_PAGES](state, res) {
       state.images = res.images;
-      state.totalPages = res.count;
+      state.totalPages = res.total;
       state.isLoading = false;
     }
   },
