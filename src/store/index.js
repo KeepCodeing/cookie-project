@@ -15,12 +15,12 @@ export default new Vuex.Store({
   mutations: {
     [LOAD_PAGE_IMAGES](state, res) {
       state.images = res.images;
-      state.totalPages = res.total;
+      state.totalPages = res.count;
       state.isLoading = false;
     },
     [LOAD_SEARCH_PAGES](state, res) {
       state.images = res.images;
-      state.totalPages = res.total;
+      state.totalPages = res.count;
       state.isLoading = false;
     }
   },
@@ -32,7 +32,7 @@ export default new Vuex.Store({
         method: 'get'
       }).then(res => context.commit(LOAD_PAGE_IMAGES, {
         images: res.data.data,
-        total: Math.ceil(res.data.total / payload['limit'])
+        total: Math.ceil(res.data.count / payload['limit'])
       }));
     },
 
@@ -43,7 +43,7 @@ export default new Vuex.Store({
         method: 'get'
       }).then(res => context.commit(LOAD_SEARCH_PAGES, {
         images: res.data.data,
-        total: Math.ceil(res.data.total / payload['limit'])
+        total: Math.ceil(res.data.count / payload['limit'])
       }))
     }
   },
