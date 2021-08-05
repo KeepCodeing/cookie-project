@@ -2,6 +2,7 @@
     <div>
         <Header />
         <thumb-image-container style="margin-top: 10px;" />
+        <pagination />
     </div>
 </template>
 
@@ -9,9 +10,10 @@
 import { defineComponent } from 'vue'
 import Header from './Header.vue'
 import ThumbImageContainer from './ThumbImageContainer.vue'
+import Pagination from './Pagination.vue'
 
 export default defineComponent({
-  components: { Header, ThumbImageContainer },
+  components: { Header, ThumbImageContainer, Pagination },
     setup () {
         
 

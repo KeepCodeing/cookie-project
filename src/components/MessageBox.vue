@@ -1,5 +1,5 @@
 <template>
-  <transition :duration="message_box.timeout" name="slide" mode="in-out">
+  <transition name="slide" :duration="message_box.timeout" >
     <div
     v-show="message_box.show"
     :class="['text' + message_type]"
@@ -18,7 +18,7 @@
       p-2
       shadow
       text-teal text-sm
-      mt-3
+      mt-4
     "
   >
     <span
@@ -69,13 +69,12 @@ export default defineComponent({
 
 <style scoped>
 @keyframes slide-up {
-  from {
-    transform: translate(-50%, 10px);
-    opacity: 0;
+  0% {
+    transform: translate(-50%, -10px);
   }
-  to {
+  100% {
     transform: translate(-50%, 0px);
-    opacity: 1;
+    transition: ease-in;
   }
 }
 .slide-enter-active {

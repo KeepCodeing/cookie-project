@@ -7,13 +7,13 @@
         class="
           col-span-4
           mr-2
-          border border-transparent
+          outline-none
           focus:outline-none
           focus:ring-1 focus:ring-yellow-200
           focus:border-transparent
           duration-300
-          border-gray-300
           pl-2
+          rounded-full
         "
       />
       <!-- 选项按钮 -->
@@ -110,7 +110,7 @@
           col-span-1
           ml-2
           text-white
-          rounded-sm
+          rounded-full
           text-sm
           border-gray-300
           hover:bg-yellow-500
@@ -132,7 +132,6 @@ import { defineComponent, reactive } from "vue";
 import { useStore } from "vuex";
 import { GlobalProp, SearchProp } from '../store/props'
 import { SEARCH_PROP_UPDATE } from '../store/type'
-import { showMessageBox } from '../utils/utils'
 
 export default defineComponent({
   setup() {
@@ -144,7 +143,6 @@ export default defineComponent({
 
     const commitSearch = () => {
         store.commit(SEARCH_PROP_UPDATE, { search_data });
-        showMessageBox({ type: '成功', message: '成功搜索xx标签/编号的静画', timeout: 1500, show: true }, store);
     }
 
     return {
