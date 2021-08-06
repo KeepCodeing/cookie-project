@@ -13,7 +13,6 @@
       items-center
       bg-white
       leading-none
-      
       rounded-full
       p-2
       shadow
