@@ -2,7 +2,7 @@
     <div>
         <Header />
         <thumb-image-container style="margin-top: 10px;" />
-        <pagination />
+        <pagination :page_limit="20" :pagination_size="12" />
     </div>
 </template>
 
