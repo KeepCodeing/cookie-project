@@ -1,5 +1,6 @@
 <template>
-  <transition name="slide" :duration="message_box.timeout" >
+  <teleport to="#message_box">
+    <transition name="slide" :duration="message_box.timeout" >
     <div
     v-show="message_box.show"
     :class="['text' + message_type]"
@@ -38,6 +39,7 @@
     >
     </div>
   </transition>
+  </teleport>
 </template>
 
 <script lang="ts">

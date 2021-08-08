@@ -8,26 +8,53 @@
       v-for="(item, idx) in illustData"
       :key="idx"
     >
-      <thumb-image :image_data="item" />
+      <thumb-image
+        @display-image="displayImage"
+        :index="idx"
+        :image_data="item"
+      />
     </div>
   </div>
+  <image-shower-dialog
+    @close-dialog="closeDialog"
+    :illustData="illustData"
+    :showDialog="showDialog"
+    :index="currentIndex"
+  />
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
-import { useStore } from 'vuex'
-import { GlobalProp } from '../store/props'
+import { defineComponent, computed, ref } from "vue";
+import { useStore } from "vuex";
+import { GlobalProp } from "../store/props";
 import ThumbImage from "./ThumbImage.vue";
+import ImageShowerDialog from "./ImageShowerDialog.vue";
 
 export default defineComponent({
-  components: { ThumbImage },
+  components: { ThumbImage, ImageShowerDialog },
   inheritAttrs: false,
   setup() {
     const store = useStore<GlobalProp>();
     const illustData = computed(() => store.state.illust_list_prop.data);
+    const showDialog = ref(false);
+    const currentIndex = ref(-1);
+
+    const displayImage = (index: number) => {
+      showDialog.value = true;
+      currentIndex.value = index;
+    };
+
+    const closeDialog = () => {
+      showDialog.value = false;
+      setTimeout(() => currentIndex.value = -1, 150);
+    };
 
     return {
-        illustData,
+      illustData,
+      showDialog,
+      displayImage,
+      closeDialog,
+      currentIndex
     };
   },
 });

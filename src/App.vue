@@ -1,9 +1,7 @@
 <template>
   <div class="h-full">
     <layout />
-    <teleport to="#message_box">
-      <message-box />
-    </teleport>
+    <message-box />
   </div>
 </template>
 
@@ -11,13 +9,13 @@
 import { defineComponent } from 'vue'
 import Layout from './components/Layout.vue'
 import MessageBox from './components/MessageBox.vue'
-import { createMessageBoxContainer } from './utils/utils'
+import { createTeleportElement } from './utils/utils'
 
 export default defineComponent({
   components: { Layout, MessageBox },
   setup () {
 
-    createMessageBoxContainer();
+    createTeleportElement(['image_shower_dialog', 'message_box']);
     return {}
   }
 })
