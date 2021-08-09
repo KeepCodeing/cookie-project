@@ -217,7 +217,7 @@
                       rounded-l-full rounded-r-full
                       overflow-ellipsis
                       break-all
-                      whitespace-nowrap                      
+                      whitespace-nowrap
                     "
                     >{{ tag }}</span
                   ></span
@@ -381,11 +381,11 @@ export default defineComponent({
 
     watch(index, (newValue, oldValue) => (currentIndex.value = newValue));
 
-    watch(
-      currentIndex,
-      (newValue, oldValue) =>
-        newValue > 0 && newValue < illustLen && loadImage(newValue)
-    );
+    watch(currentIndex, (newValue, oldValue) => {
+      newValue >= 0 && newValue < illustLen
+        ? loadImage(newValue)
+        : (currentIndex.value = oldValue);
+    });
 
     const displayImage = (idx: number) => (currentIndex.value = idx);
 
