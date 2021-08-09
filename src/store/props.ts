@@ -19,7 +19,7 @@ export interface IllustProp {
     description: string,
     source_url: string,
     created: string,
-    tags?: string[],
+    tags: string[],
     cdn_url: string,
     updated: string,
     favorite?: number,

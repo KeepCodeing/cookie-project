@@ -9,7 +9,7 @@
         <div class="h-full w-full fixed top-0" v-show="showDialog">
           <div
             @click="$emit('close-dialog')"
-            class="absolute right-3 top-4 cursor-pointer md:right-10 md:top-3"
+            class="absolute right-3 top-4 cursor-pointer md:right-10 md:top-4"
             style="z-index: 10"
           >
             <svg
@@ -34,7 +34,7 @@
           </div>
 
           <div
-            style="height: 95%; width: 95%"
+            style="height: 95%; width: 95%; background: none"
             class="
               fixed
               top-1/2
@@ -45,17 +45,71 @@
               grid grid-cols-9 grid-rows-5
             "
           >
+            <!-- image shower -->
             <div
-              v-if="index !== -1"
               class="
                 flex
                 justify-center
+                items-center
                 row-span-3
                 col-span-9
                 md:col-span-7
                 md:row-span-4
+                image-container
+                relative
               "
             >
+              <div
+                @click="currentIndex--"
+                class="swiper-button left-0 hidden absolute cursor-pointer"
+              >
+                <svg
+                  fill="white"
+                  t="1628493822136"
+                  class="icon"
+                  viewBox="0 0 1024 1024"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  p-id="1981"
+                  width="40"
+                  height="40"
+                >
+                  <path
+                    d="M321.618 512.117l33.107 33.128 0.142-0.14 314.408 314.434 33.107-33.107L387.97 512 702.382 197.565l-33.107-33.103-314.408 314.431-0.14200001-0.14-33.10699999 33.131 0.118 0.117-0.118 0.116z m0 0"
+                    p-id="1982"
+                  ></path>
+                </svg>
+              </div>
+              <div
+                @click="currentIndex++"
+                class="
+                  swiper-button
+                  hidden
+                  absolute
+                  right-0
+                  transform
+                  rotate-180
+                  cursor-pointer
+                "
+              >
+                <svg
+                  fill="white"
+                  t="1628493822136"
+                  class="icon"
+                  viewBox="0 0 1024 1024"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  p-id="1981"
+                  width="40"
+                  height="40"
+                >
+                  <path
+                    d="M321.618 512.117l33.107 33.128 0.142-0.14 314.408 314.434 33.107-33.107L387.97 512 702.382 197.565l-33.107-33.103-314.408 314.431-0.14200001-0.14-33.10699999 33.131 0.118 0.117-0.118 0.116z m0 0"
+                    p-id="1982"
+                  ></path>
+                </svg>
+              </div>
+
               <div
                 class="
                   bg-center
@@ -83,72 +137,179 @@
                 ></div>
               </div>
             </div>
+            <!-- info -->
             <div
               class="
                 bg-white
                 px-3
                 p-2
-                overflow-y-scroll
+                overflow-y-scroll overflow-x-hidden
                 row-span-2
                 col-span-9
                 md:col-span-2
                 md:row-span-4
+                break-words
+                white-space-nowarp
               "
-              v-if="index !== -1"
             >
               <div class="pb-2">
                 <div class="py-1 text-lg text-gray-800">作者</div>
-                <div
-                  @click="
-                    window.open(
-                      'https://seiga.nicovideo.jp/user/illust/' +
-                        illustData[index].user_id
-                    )
-                  "
-                  class="text-blue-500 text-base cursor-pointer"
-                >
-                  {{ illustData[index].username }}
+                <div class="text-blue-500 text-base">
+                  <span
+                    @click="
+                      window.open(
+                        'https://seiga.nicovideo.jp/user/illust/' +
+                          illustData[currentIndex].user_id
+                      )
+                    "
+                    class="cursor-pointer"
+                    >{{ illustData[index].username }}</span
+                  >
                 </div>
               </div>
               <div class="pb-2">
                 <div class="py-1 text-lg text-gray-800">标题</div>
                 <div class="text-base text-gray-500">
-                  {{ illustData[index].title }}
+                  {{ illustData[currentIndex].title }}
                 </div>
               </div>
               <div class="pb-2">
                 <div class="py-1 text-lg text-gray-800">简介</div>
                 <div
-                  v-html="illustData[index].description"
+                  v-html="illustData[currentIndex].description"
                   class="text-base text-gray-500"
                 ></div>
               </div>
               <div class="pb-2">
                 <div class="py-1 text-lg text-gray-800">静画id</div>
-                <div
-                  @click="
-                    window.open(
-                      'https://seiga.nicovideo.jp/seiga/im' +
-                        illustData[index].sid
-                    )
-                  "
-                  class="text-blue-500 text-base cursor-pointer"
-                >
-                  im{{ illustData[index].sid }}
+                <div class="text-blue-500 text-base">
+                  <span
+                    @click="
+                      window.open(
+                        'https://seiga.nicovideo.jp/seiga/im' +
+                          illustData[currentIndex].sid
+                      )
+                    "
+                    class="cursor-pointer"
+                    >im{{ illustData[currentIndex].sid }}</span
+                  >
                 </div>
               </div>
               <div class="pb-2">
                 <div class="py-1 text-lg text-gray-800">投稿时间</div>
                 <div class="text-base text-gray-500">
-                  {{ illustData[index].updated }}
+                  {{ illustData[currentIndex].updated }}
                 </div>
               </div>
               <div class="pb-2">
                 <div class="py-1 text-lg text-gray-800">标签</div>
-                {{ illustData[index].tags }}
+                <span
+                  v-for="(tag, idx) in illustData[currentIndex].tags"
+                  :key="idx"
+                  class="inline-flex cursor-pointer mr-1 mb-2"
+                  ><span
+                    :class="'bg-' + color_list[idx % color_len] + '-500'"
+                    class="
+                      py-1.5
+                      text-white
+                      px-2
+                      text-sm
+                      rounded-l-full rounded-r-full
+                      overflow-ellipsis
+                      break-all
+                      whitespace-nowrap                      
+                    "
+                    >{{ tag }}</span
+                  ></span
+                >
               </div>
             </div>
-            <div class="bg-yellow-200 col-span-9 row-span-1"></div>
+            <!-- swiper -->
+            <div
+              style="background: rgba(255, 255, 255, 0)"
+              class="col-span-9 row-span-1 hidden md:block"
+            >
+              <div
+                class="
+                  swiper-container
+                  flex
+                  py-1
+                  overflow-y-hidden
+                  items-center
+                  overflow-x-scroll
+                  h-full
+                "
+                id="swiper_container"
+              >
+                <div
+                  class="swiper-button hidden absolute cursor-pointer"
+                  @click="scrollSwiper('left')"
+                >
+                  <svg
+                    fill="white"
+                    t="1628493822136"
+                    class="icon"
+                    viewBox="0 0 1024 1024"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    p-id="1981"
+                    width="40"
+                    height="40"
+                  >
+                    <path
+                      d="M321.618 512.117l33.107 33.128 0.142-0.14 314.408 314.434 33.107-33.107L387.97 512 702.382 197.565l-33.107-33.103-314.408 314.431-0.14200001-0.14-33.10699999 33.131 0.118 0.117-0.118 0.116z m0 0"
+                      p-id="1982"
+                    ></path>
+                  </svg>
+                </div>
+                <div
+                  class="
+                    swiper-button
+                    hidden
+                    absolute
+                    right-0
+                    transform
+                    rotate-180
+                    cursor-pointer
+                  "
+                  @click="scrollSwiper('right')"
+                >
+                  <svg
+                    fill="white"
+                    t="1628493822136"
+                    class="icon"
+                    viewBox="0 0 1024 1024"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    p-id="1981"
+                    width="40"
+                    height="40"
+                  >
+                    <path
+                      d="M321.618 512.117l33.107 33.128 0.142-0.14 314.408 314.434 33.107-33.107L387.97 512 702.382 197.565l-33.107-33.103-314.408 314.431-0.14200001-0.14-33.10699999 33.131 0.118 0.117-0.118 0.116z m0 0"
+                      p-id="1982"
+                    ></path>
+                  </svg>
+                </div>
+                <div class="h-full flex">
+                  <div
+                    :key="idx"
+                    v-for="(img, idx) in illustData"
+                    class="h-full w-40 m-0.5 bg-white flex-shrink-0 flex-grow-0"
+                    :class="{
+                      'border-yellow-400 border-4': currentIndex === idx,
+                    }"
+                  >
+                    <thumb-image
+                      @display-image="displayImage"
+                      :small="true"
+                      :image_data="img"
+                      :index="idx"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </transition>
@@ -157,10 +318,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, watch, toRefs, ref } from "vue";
+import { defineComponent, PropType, watch, toRefs, ref, onMounted } from "vue";
 import { IllustProp } from "../store/props";
+import ThumbImage from "./ThumbImage.vue";
 
 export default defineComponent({
+  components: { ThumbImage },
   props: {
     showDialog: {
       type: Boolean,
@@ -179,13 +342,27 @@ export default defineComponent({
     "close-dialog": null,
   },
   setup(props) {
-    const { illustData, index } = toRefs(props);
+    let { illustData, index } = toRefs(props);
+    let currentIndex = ref(0);
 
     const image_url = ref("");
     const thumb_url = ref("");
+    const swpier_container = ref<HTMLElement | null>(null);
+    const illustLen = illustData.value.length;
 
-    watch(index, (newValue, oldValue) => {
-      if (newValue === -1) return;
+    const color_list = [
+      "red",
+      "yellow",
+      "blue",
+      "green",
+      "indigo",
+      "purple",
+      "orange",
+    ];
+
+    const color_len = color_list.length;
+
+    const loadImage = (newValue: number) => {
       const img = new Image();
       image_url.value =
         "https://lohas.nicoseiga.jp/thumb/" +
@@ -194,12 +371,48 @@ export default defineComponent({
       thumb_url.value = image_url.value;
       img.src = illustData.value[newValue].cdn_url;
       img.onload = () => (image_url.value = img.src);
+    };
+
+    onMounted(() => {
+      swpier_container.value = document.getElementById("swiper_container");
     });
+
+    loadImage(currentIndex.value);
+
+    watch(index, (newValue, oldValue) => (currentIndex.value = newValue));
+
+    watch(
+      currentIndex,
+      (newValue, oldValue) =>
+        newValue > 0 && newValue < illustLen && loadImage(newValue)
+    );
+
+    const displayImage = (idx: number) => (currentIndex.value = idx);
+
+    const scrollSwiper = (to: string) => {
+      const timeout: number = 10;
+      const offset: number = 400;
+      const mv: number = (to === "left" ? -offset : offset) / timeout;
+
+      let cnt = 30;
+
+      const timer = setInterval(() => {
+        if (swpier_container.value?.scrollLeft !== undefined)
+          swpier_container.value.scrollLeft += mv;
+        if (cnt-- <= 0) clearInterval(timer);
+      }, timeout);
+    };
 
     return {
       image_url,
       thumb_url,
       window,
+      color_list,
+      color_len,
+      currentIndex,
+      displayImage,
+      scrollSwiper,
+      swpier_container,
     };
   },
 });
@@ -222,10 +435,28 @@ export default defineComponent({
     transform: scale(0.7);
   }
 }
+@keyframes fade-in {
+  from {
+    display: none;
+    opacity: 0;
+  }
+  to {
+    display: block;
+    opacity: 1;
+  }
+}
 .scale-enter-active {
   animation: scale_enter 0.3s;
 }
 .scale-leave-active {
   animation: scale_enter reverse 0.3s;
+}
+.swiper-container:hover .swiper-button {
+  display: block;
+  animation: fade-in 0.3s;
+}
+.image-container:hover .swiper-button {
+  display: block;
+  animation: fade-in 0.3s;
 }
 </style>

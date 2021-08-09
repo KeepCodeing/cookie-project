@@ -5,9 +5,8 @@
       shadow-md
       w-full
       bg-white
-      thumb-image-box
     "
-    :class="small ? 'h-full' : 'md:h-72 h-48'"
+    :class="small ? 'h-full' : 'md:h-72 h-48 thumb-image-box'"
     @click="displayImage"
   >
     <loading-animation v-if="!is_loaded" />
@@ -54,7 +53,7 @@ export default defineComponent({
       is_loaded.value = true;
     };
 
-    const displayImage = () => emit('display-image', props.index);
+    const displayImage = () => is_loaded && emit('display-image', props.index);
 		
     return {
       image_url,

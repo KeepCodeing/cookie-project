@@ -37,7 +37,7 @@ export default defineComponent({
     const store = useStore<GlobalProp>();
     const illustData = computed(() => store.state.illust_list_prop.data);
     const showDialog = ref(false);
-    const currentIndex = ref(-1);
+    const currentIndex = ref(0);
 
     const displayImage = (index: number) => {
       showDialog.value = true;
@@ -46,7 +46,7 @@ export default defineComponent({
 
     const closeDialog = () => {
       showDialog.value = false;
-      setTimeout(() => currentIndex.value = -1, 150);
+      // setTimeout(() => currentIndex.value = -1, 150);
     };
 
     return {
