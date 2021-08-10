@@ -443,14 +443,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, watch, toRaw } from "vue";
+import { defineComponent, ref, reactive, watch, toRaw, computed } from "vue";
 import { showMessageBox } from "../utils/utils";
 import { useStore } from "vuex";
+import { useRoute } from 'vue-router'
 import { GlobalProp } from "@/store/props";
+import { UPDATE_PAGINATION } from "@/store/type";
 
 export default defineComponent({
   props: {
-    // get from route parmas
+    // get from route parmas not at all, cause can't use default router parma
     page_limit: {
       type: Number,
       default: 20,
@@ -459,26 +461,36 @@ export default defineComponent({
       type: Number,
       default: 12,
     },
+    total_count: {
+      type: Number,
+      default: 114514,
+      required: true,
+    }
   },
   setup(props) {
-    const total_count = 114514;
-    const total_page = Math.ceil(total_count / props.page_limit + 0.5);
-    const over_page_size = ref(total_page > props.pagination_size);
-
+    const total_count = ref(props.total_count);
+    const total_page = computed(() => Math.ceil(total_count.value / props.page_limit + 0.5));
+    const over_page_size = ref(total_page.value > props.pagination_size);
     const p_size = ref(
-      over_page_size.value ? props.pagination_size / 2 : total_page
+      over_page_size.value ? props.pagination_size / 2 : total_page.value
     );
 
+    const route = useRoute();
     const store = useStore<GlobalProp>();
 
     const current_page = ref(1);
+
+    if (route.query.pn) {
+      current_page.value = parseInt(route.query.pn.toString());
+      store.commit(UPDATE_PAGINATION, { page: route.query.pn });
+    }
 
     let page_list: number[] = reactive([]);
 
     watch(
       [current_page, page_list],
       ([newValue, newValue1], [oldValue, oldValue1]) => {
-        if (newValue < 1 || newValue > total_page) {
+        if (newValue < 1 || newValue > total_page.value) {
           current_page.value = oldValue;
           showMessageBox(
             {
@@ -491,10 +503,11 @@ export default defineComponent({
           );
           return;
         }
+        store.commit(UPDATE_PAGINATION, { page: newValue });
         let temp: number[] = toRaw(page_list);
         if (
           Math.abs(newValue - oldValue) >= temp.length - 1 ||
-          newValue + p_size.value >= total_page
+          newValue + p_size.value >= total_page.value
         ) {
           while (temp.length) temp.pop();
         }
@@ -507,7 +520,7 @@ export default defineComponent({
             let i = 0;
             // 如果是前部分的最大值，则从3开始向后增加
             if (newValue === p_size.value) {
-              for (let i = 3; i < p_size.value * 2 && i < total_page; i++)
+              for (let i = 3; i < p_size.value * 2 && i < total_page.value; i++)
                 temp.push(i);
             } else {
               // 否则从current_page - p_size 到 current_page + p_size
@@ -519,7 +532,7 @@ export default defineComponent({
                 temp.push(i);
               for (
                 let i = current_page.value;
-                i < current_page.value + p_size.value && i < total_page;
+                i < current_page.value + p_size.value && i < total_page.value;
                 i++
               )
                 temp.push(i);
@@ -542,7 +555,7 @@ export default defineComponent({
               let p_len = temp.length - 1;
               for (
                 let i = temp[p_len] + 1;
-                i < temp[p_len] + offset + 1 && i < total_page;
+                i < temp[p_len] + offset + 1 && i < total_page.value;
                 i++
               )
                 temp.push(i);

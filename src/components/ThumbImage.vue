@@ -1,11 +1,6 @@
 <template>
   <div
-    class="
-      cursor-pointer
-      shadow-md
-      w-full
-      bg-white
-    "
+    class="cursor-pointer shadow-md w-full bg-white"
     :class="small ? 'h-full' : 'md:h-72 h-48 thumb-image-box'"
     @click="displayImage"
   >
@@ -15,21 +10,22 @@
       v-else
       class="h-full w-full bg-cover bg-center bg-no-repeat"
       :style="{ backgroundImage: 'url(' + image_url + ')' }"
-    ></div>
+    >
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType } from "vue";
+import { defineComponent, ref, toRefs, watch } from "vue";
 import LoadingAnimation from "./LoadingAnimation.vue";
-import { IllustProp } from "../store/props";
 
 export default defineComponent({
   components: { LoadingAnimation },
   props: {
-    image_data: {
-      type: Object as PropType<IllustProp>,
+    sid: {
+      type: String,
       required: true,
+      default: '',
     },
     index: {
       type: Number,
@@ -38,27 +34,37 @@ export default defineComponent({
     small: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   setup(props, { emit }) {
-    const img = new Image();
-    const image_url = ref(
-      "https://lohas.nicoseiga.jp/thumb/" + props.image_data.sid + "i"
-    );
+    const { sid } = toRefs(props);
     const is_loaded = ref(false);
+    const image_url = ref('');
 
-    img.src = image_url.value;
+    const loadImage = (nsid: string) => {
+      const img = new Image();
+      
+      is_loaded.value = false;
+      image_url.value = "https://lohas.nicoseiga.jp/thumb/" + nsid + "i"
 
-    img.onload = () => {
-      is_loaded.value = true;
+      img.src = image_url.value;
+
+      img.onload = () => {
+        is_loaded.value = true;
+      };
     };
 
-    const displayImage = () => is_loaded && emit('display-image', props.index);
-		
+    loadImage(sid.value);
+
+    watch(sid, (n, o) => loadImage(n));
+
+    const displayImage = () => is_loaded && emit("display-image", props.index);
+
     return {
       image_url,
       is_loaded,
-      displayImage
+      displayImage,
+      sid,
     };
   },
 });

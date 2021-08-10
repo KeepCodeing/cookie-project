@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const inc = axios;
-inc.defaults.baseURL = 'https://dog.ceo/api/breeds/image';
+inc.defaults.baseURL = '/api';
 
 inc.interceptors.request.use((config) => {
     return config;

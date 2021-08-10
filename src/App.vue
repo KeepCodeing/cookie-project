@@ -1,20 +1,15 @@
 <template>
   <div class="h-full">
-    <layout />
-    <message-box />
+    <router-view />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Layout from './components/Layout.vue'
-import MessageBox from './components/MessageBox.vue'
 import { createTeleportElement } from './utils/utils'
 
 export default defineComponent({
-  components: { Layout, MessageBox },
   setup () {
-
     createTeleportElement(['image_shower_dialog', 'message_box']);
     return {}
   }

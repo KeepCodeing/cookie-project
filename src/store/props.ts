@@ -1,6 +1,9 @@
 export interface SearchProp {
     keyword: string,
-    tag: boolean
+    type: 'username' | 'tags' | 'sid' | 'all' | 'userid',
+    join: 'OR' | 'AND',
+    pn: number,
+    limit: number
 }
 
 export interface MessageBoxProp {
@@ -36,5 +39,5 @@ export interface IllustListProp {
 export interface GlobalProp {
  search_prop: SearchProp,   
  message_box_prop: MessageBoxProp,
- illust_list_prop: IllustListProp,
+ illust_list_prop: IllustListProp | null,
 }

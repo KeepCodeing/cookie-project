@@ -8,7 +8,7 @@
       <transition name="scale">
         <div class="h-full w-full fixed top-0" v-show="showDialog">
           <div
-            @click="$emit('close-dialog')"
+            @click="closeDialog"
             class="absolute right-3 top-4 cursor-pointer md:right-10 md:top-4"
             style="z-index: 10"
           >
@@ -109,7 +109,6 @@
                   ></path>
                 </svg>
               </div>
-
               <div
                 class="
                   bg-center
@@ -303,7 +302,7 @@
                     <thumb-image
                       @display-image="displayImage"
                       :small="true"
-                      :image_data="img"
+                      :sid="img.sid"
                       :index="idx"
                     />
                   </div>
@@ -341,9 +340,9 @@ export default defineComponent({
   emits: {
     "close-dialog": null,
   },
-  setup(props) {
+  setup(props, { emit }) {
     let { illustData, index } = toRefs(props);
-    let currentIndex = ref(0);
+    const currentIndex = ref(0);
 
     const image_url = ref("");
     const thumb_url = ref("");
@@ -357,10 +356,17 @@ export default defineComponent({
       "green",
       "indigo",
       "purple",
-      "orange",
+      "pink",
     ];
 
     const color_len = color_list.length;
+    // 用来修复不同页点击相同位置图片图片不更新的错误
+    // 因为这个差点摆烂
+    watch(illustData, (n, o) => {
+      image_url.value =
+        "https://lohas.nicoseiga.jp/thumb/" + n[currentIndex.value].sid + "i";
+      thumb_url.value = image_url.value;
+    });
 
     const loadImage = (newValue: number) => {
       const img = new Image();
@@ -370,7 +376,12 @@ export default defineComponent({
         "i";
       thumb_url.value = image_url.value;
       img.src = illustData.value[newValue].cdn_url;
-      img.onload = () => (image_url.value = img.src);
+      const t = (val: number) => val;
+      img.onload = () => {
+        // console.log(t(newValue), currentIndex.value)
+        if (t(newValue) !== currentIndex.value) return;
+        image_url.value = thumb_url.value = img.src;
+      };
     };
 
     onMounted(() => {
@@ -382,12 +393,16 @@ export default defineComponent({
     watch(index, (newValue, oldValue) => (currentIndex.value = newValue));
 
     watch(currentIndex, (newValue, oldValue) => {
-      newValue >= 0 && newValue < illustLen
+      return newValue >= 0 && newValue < illustLen
         ? loadImage(newValue)
         : (currentIndex.value = oldValue);
     });
 
     const displayImage = (idx: number) => (currentIndex.value = idx);
+
+    const closeDialog = () => {
+      emit("close-dialog");
+    };
 
     const scrollSwiper = (to: string) => {
       const timeout: number = 10;
@@ -413,6 +428,7 @@ export default defineComponent({
       displayImage,
       scrollSwiper,
       swpier_container,
+      closeDialog,
     };
   },
 });

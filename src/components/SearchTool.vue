@@ -29,8 +29,8 @@
         "
       >
         <button
-          @click="search_data.tag = true"
-          :class="{ button_active: search_data.tag }"
+          @click="search_data.type = 'tags'"
+          :class="{ button_active: search_data.type === 'tags' }"
           class="
             inline-flex
             items-center
@@ -65,8 +65,8 @@
           <span>标签</span>
         </button>
         <button
-          @click="search_data.tag = false"
-          :class="{ button_active: !search_data.tag }"
+          @click="search_data.type = 'sid'"
+          :class="{ button_active: search_data.type === 'sid' }"
           class="
             inline-flex
             items-center
@@ -130,20 +130,53 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 import { useStore } from "vuex";
-import { GlobalProp, SearchProp } from '../store/props'
-import { SEARCH_PROP_UPDATE } from '../store/type'
+import { useRoute } from 'vue-router'
+import { GlobalProp } from "../store/props";
+import { UPDATE_KEYWORD } from "../store/type";
+import { showMessageBox } from "../utils/utils";
 
 export default defineComponent({
   setup() {
     const store = useStore<GlobalProp>();
-    const search_data: SearchProp = reactive({
-        keyword: '',
-        tag: true,
+    const route = useRoute();
+    const search_data = reactive({
+      keyword: "",
+      type: "tags",
     });
 
+    if (route.query.keyword && route.query.type) {
+      search_data.keyword = route.query.keyword.toString();
+      search_data.type = route.query.type.toString();
+      store.commit(UPDATE_KEYWORD, {
+        keyword: search_data.keyword,
+        type: search_data.type,
+      });
+    };
+
     const commitSearch = () => {
-        store.commit(SEARCH_PROP_UPDATE, { search_data });
-    }
+      if (search_data.keyword === "") return;
+      const keyword = search_data.keyword
+        .replaceAll("姐贵", "姉貴")
+        .replaceAll("兄贵", "兄貴")
+        .replaceAll(/\s+/g, " ")
+        .trimEnd()
+        .trimStart();
+      showMessageBox(
+        {
+          type: "成功",
+          message: `成功搜索${search_data.keyword}${
+            search_data.type === "tags" ? "标签" : "编号"
+          }的静画`,
+          timeout: 1500,
+          show: true,
+        },
+        store
+      );
+      store.commit(UPDATE_KEYWORD, {
+        keyword,
+        type: search_data.type,
+      });
+    };
 
     return {
       search_data,
