@@ -29,6 +29,11 @@ export interface IllustProp {
     favorited?: boolean
 }
 
+export interface UserStatusProp {
+    token: string,
+    isLogin: boolean
+}
+
 export interface IllustListProp {
     code: number,
     message: string,
@@ -41,4 +46,5 @@ export interface GlobalProp {
  message_box_prop: MessageBoxProp,
  illust_list_prop: IllustListProp | null,
  can_back: number,
+ use_status_prop: UserStatusProp
 }

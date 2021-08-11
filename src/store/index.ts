@@ -5,10 +5,13 @@ import {
   LOAD_PAGE_IMAGE,
   UPDATE_PAGINATION,
   UPDATE_KEYWORD,
-  UPDATE_CAN_BACK
+  UPDATE_CAN_BACK,
+  LOGIN_ACTION,
+  UPDATE_USER_STATUS,
+  REGISTER_ACTION,
 } from "./type";
 import { GlobalProp } from "./props";
-import { object2Parma } from "../utils/utils";
+import { object2Parma, showMessageBox } from "../utils/utils";
 import axios from "../plugins/axios";
 
 export default createStore<GlobalProp>({
@@ -16,7 +19,8 @@ export default createStore<GlobalProp>({
     search_prop: { keyword: "all", type: "all", join: "OR", pn: 1, limit: 20 },
     message_box_prop: { type: "成功", show: false, timeout: 1500, message: "" },
     illust_list_prop: null,
-    can_back: 0
+    can_back: 0,
+    use_status_prop: { token: "", isLogin: false },
   },
   mutations: {
     [UPDATE_KEYWORD](state, { keyword, type }) {
@@ -37,7 +41,10 @@ export default createStore<GlobalProp>({
     },
     [UPDATE_CAN_BACK](state, { cnt }) {
       state.can_back += cnt;
-    }
+    },
+    [UPDATE_USER_STATUS](state, status) {
+      state.use_status_prop = status;
+    },
   },
   actions: {
     async [GET_PAGE_IMAGE]({ commit }, parma) {
@@ -46,6 +53,36 @@ export default createStore<GlobalProp>({
         url: `/search?${object2Parma(parma.value)}`,
       });
       commit(LOAD_PAGE_IMAGE, data);
+    },
+    async [LOGIN_ACTION]({ commit }, userinfo) {
+      try {
+        const { data } = await axios({
+          method: "post",
+          url: "/auth/login",
+          data: userinfo,
+        });
+        const token = data.token_type + " " + data.access_token;
+        sessionStorage.setItem("token", token);
+        commit(UPDATE_USER_STATUS, { isLogin: true, token });
+      } catch {}
+    },
+    async [REGISTER_ACTION]({ commit }, userinfo) {
+      try {
+        const { data } = await axios({
+          method: "post",
+          url: "/auth/register",
+          data: userinfo,
+        });
+        showMessageBox(
+          {
+            timeout: 500,
+            type: "成功",
+            message: "注册成功，登陆，请（懒狗）...",
+            show: true,
+          },
+          this
+        );
+      } catch {}
     },
   },
   modules: {},

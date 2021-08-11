@@ -17,18 +17,12 @@
       <div>
         <img
           class="mx-auto h-12 w-auto"
-          src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+          src="../../public/cookie.png"
           alt="Workflow"
         />
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
           <slot name="headline">登陆到饼图站</slot>
         </h2>
-        <!-- <p class="mt-2 text-center text-sm text-gray-600">
-          或
-          <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
-            注册
-          </a>
-        </p> -->
       </div>
       <form @submit.prevent="submitForm" class="mt-8 space-y-6">
         <div class="rounded-md shadow-sm -space-y-px">
@@ -36,7 +30,7 @@
           <div>
             <input
               required
-              v-model="user_info.account"
+              v-model="user_info.username"
               class="
                 appearance-none
                 rounded-none
@@ -50,7 +44,7 @@
                 text-gray-900
                 rounded-t-md
                 focus:outline-none
-                focus:ring-indigo-500
+                focus:ring-1 focus:ring-indigo-500
                 focus:border-indigo-500
                 focus:z-10
                 sm:text-sm
@@ -77,6 +71,7 @@
                 focus:outline-none
                 focus:ring-indigo-500
                 focus:border-indigo-500
+                focus:ring-1
                 focus:z-10
                 sm:text-sm
               "
@@ -86,7 +81,7 @@
           <!-- register code -->
           <div>
             <input
-              v-model="user_info.register_code"
+              v-model="user_info.code"
               class="
                 appearance-none
                 rounded-none
@@ -102,6 +97,7 @@
                 focus:outline-none
                 focus:ring-indigo-500
                 focus:border-indigo-500
+                focus:ring-1
                 focus:z-10
                 sm:text-sm
               "
@@ -185,23 +181,48 @@
       </form>
     </div>
   </div>
+  {{ userStatus }}
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, computed, watch } from "vue";
 import { showMessageBox } from "../utils/utils";
 import { useStore } from "vuex";
+import { GlobalProp } from "@/store/props";
+import { LOGIN_ACTION, REGISTER_ACTION } from "@/store/type";
+import qs from "qs";
+import router from "@/router";
 
 export default defineComponent({
   setup() {
-    const store = useStore();
+    const store = useStore<GlobalProp>();
+    const userStatus = computed(() => store.state.use_status_prop);
     const user_info = reactive({
-      account: "",
+      username: "",
       password: "",
-      register_code: "",
+      code: "",
     });
+    watch(
+      () => userStatus.value.isLogin,
+      (n, o) => {
+        if (n) {
+          setTimeout(() => {
+            showMessageBox(
+              {
+                timeout: 1000,
+                type: "成功",
+                message: "登陆成功！用户进来了！",
+                show: true,
+              },
+              store
+            );
+            router.replace("/index?keyword=all&pn=1&type=all");
+          }, 1100);
+        }
+      }
+    );
     const submitForm = () => {
-      if (!user_info.account || !user_info.password) {
+      if (!user_info.username || !user_info.password) {
         showMessageBox(
           {
             timeout: 1500,
@@ -213,11 +234,23 @@ export default defineComponent({
         );
         return;
       }
-      
+      if (user_info.code) {
+        store.dispatch(REGISTER_ACTION, user_info);
+        setTimeout(() => user_info.code = '', 300);
+      } else {
+        store.dispatch(
+          LOGIN_ACTION,
+          qs.stringify({
+            username: user_info.username,
+            password: user_info.password,
+          })
+        );
+      }
     };
     return {
       submitForm,
       user_info,
+      userStatus,
     };
   },
 });

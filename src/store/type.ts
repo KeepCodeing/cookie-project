@@ -8,3 +8,9 @@ export const UPDATE_PAGINATION: string = 'updatePagination';
 export const UPDATE_KEYWORD: string = 'updateKeyword';
 
 export const UPDATE_CAN_BACK: string = 'updateCanBack';
+
+export const LOGIN_ACTION: string = 'loginAction';
+
+export const UPDATE_USER_STATUS: string = 'updateUserStatus';
+
+export const REGISTER_ACTION: string = 'registerAction';
