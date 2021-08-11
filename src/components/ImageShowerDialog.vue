@@ -151,6 +151,7 @@
                 white-space-nowarp
               "
             >
+              <!-- 作者 -->
               <div class="pb-2">
                 <div class="py-1 text-lg text-gray-800">作者</div>
                 <div class="text-blue-500 text-base">
@@ -166,12 +167,14 @@
                   >
                 </div>
               </div>
+              <!-- 标题 -->
               <div class="pb-2">
                 <div class="py-1 text-lg text-gray-800">标题</div>
                 <div class="text-base text-gray-500">
                   {{ illustData[currentIndex].title }}
                 </div>
               </div>
+              <!-- 简介 -->
               <div class="pb-2">
                 <div class="py-1 text-lg text-gray-800">简介</div>
                 <div
@@ -179,6 +182,7 @@
                   class="text-base text-gray-500"
                 ></div>
               </div>
+              <!-- 静画id -->
               <div class="pb-2">
                 <div class="py-1 text-lg text-gray-800">静画id</div>
                 <div class="text-blue-500 text-base">
@@ -194,12 +198,14 @@
                   >
                 </div>
               </div>
+              <!-- 投稿时间 -->
               <div class="pb-2">
                 <div class="py-1 text-lg text-gray-800">投稿时间</div>
                 <div class="text-base text-gray-500">
                   {{ illustData[currentIndex].updated }}
                 </div>
               </div>
+              <!-- 标签 -->
               <div class="pb-2">
                 <div class="py-1 text-lg text-gray-800">标签</div>
                 <span
@@ -222,6 +228,13 @@
                     >{{ tag }}</span
                   ></span
                 >
+              </div>
+              <!-- 收藏数 -->
+              <div class="pb-2">
+                <div class="py-1 text-lg text-gray-800">收藏数</div>
+                <div class="text-base text-gray-500">
+                  {{ illustData[currentIndex].favorite }}
+                </div>
               </div>
             </div>
             <!-- swiper -->
