@@ -6,12 +6,19 @@ const index = {
   component: () => import('../views/index.vue'),
 }
 
+const login = {
+  name: 'login',
+  path: '/login',
+  component: () => import('../views/Login.vue')
+}
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     redirect: '/index'
   },
-  index
+  index,
+  login
 ]
 
 const router = createRouter({

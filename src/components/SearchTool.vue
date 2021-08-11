@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="grid h-full grid-cols-7 grid-rows-2 md:grid-rows-1">
+    <div class="grid h-full grid-cols-8 grid-rows-2 md:grid-rows-1">
       <!-- 输入框 -->
       <input
         v-model="search_data.keyword"
@@ -103,6 +103,7 @@
           <span>编号</span>
         </button>
       </div>
+
       <!-- 搜索 -->
       <button
         @click="commitSearch"
@@ -123,22 +124,43 @@
       >
         搜索
       </button>
+      <button
+        v-show="can_back > 0"
+        @click="back"
+        class="
+          text-white text-sm
+          border-gray-300
+          hover:bg-blue-500
+          px-3
+          py-2
+          col-span-1
+          ml-2
+          rounded-full
+          transition-colors
+          duration-150
+          bg-blue-400
+        "
+      >
+        返回
+      </button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { computed, defineComponent, reactive, watch, toRefs } from "vue";
 import { useStore } from "vuex";
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from "vue-router";
 import { GlobalProp } from "../store/props";
-import { UPDATE_KEYWORD } from "../store/type";
+import { UPDATE_CAN_BACK, UPDATE_KEYWORD } from "../store/type";
 import { showMessageBox } from "../utils/utils";
 
 export default defineComponent({
   setup() {
     const store = useStore<GlobalProp>();
     const route = useRoute();
+    const router = useRouter();
+    const can_back = computed(() => store.state.can_back);
     const search_data = reactive({
       keyword: "",
       type: "tags",
@@ -151,7 +173,19 @@ export default defineComponent({
         keyword: search_data.keyword,
         type: search_data.type,
       });
-    };
+    }
+    const { keyword, type } = toRefs(route.query);
+    watch(() => route.query.keyword, (n, o) => {
+      if (n && route.query && route.query.type) {
+        
+        search_data.keyword = n.toString();
+        search_data.type = route.query.type.toString();
+        store.commit(UPDATE_KEYWORD, {
+          keyword: search_data.keyword,
+          type: search_data.type,
+        });
+      }
+    });
 
     const commitSearch = () => {
       if (search_data.keyword === "") return;
@@ -178,9 +212,16 @@ export default defineComponent({
       });
     };
 
+    const back = () => {
+      router.back();
+      store.commit(UPDATE_CAN_BACK, { cnt: -1 });
+    };
+
     return {
       search_data,
       commitSearch,
+      back,
+      can_back,
     };
   },
 });

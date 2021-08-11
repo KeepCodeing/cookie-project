@@ -204,6 +204,7 @@
                 <div class="py-1 text-lg text-gray-800">标签</div>
                 <span
                   v-for="(tag, idx) in illustData[currentIndex].tags"
+                  @click="searchTag(tag, idx === illustData[currentIndex].tags.length - 1 ? illustData[currentIndex].user_id : '')"
                   :key="idx"
                   class="inline-flex cursor-pointer mr-1 mb-2"
                   ><span
@@ -320,6 +321,8 @@
 import { defineComponent, PropType, watch, toRefs, ref, onMounted } from "vue";
 import { IllustProp } from "../store/props";
 import ThumbImage from "./ThumbImage.vue";
+import { useStore } from 'vuex'
+import { UPDATE_KEYWORD } from "@/store/type";
 
 export default defineComponent({
   components: { ThumbImage },
@@ -348,6 +351,7 @@ export default defineComponent({
     const thumb_url = ref("");
     const swpier_container = ref<HTMLElement | null>(null);
     const illustLen = illustData.value.length;
+    const store = useStore();
 
     const color_list = [
       "red",
@@ -404,6 +408,15 @@ export default defineComponent({
       emit("close-dialog");
     };
 
+    const searchTag = (tag: string, type: string) => {
+      if (!type) {
+        store.commit(UPDATE_KEYWORD, { keyword: tag, type: 'tags' });
+      } else {
+        store.commit(UPDATE_KEYWORD, { keyword: type, type: 'userid' });
+      }
+      closeDialog();
+    }
+
     const scrollSwiper = (to: string) => {
       const timeout: number = 10;
       const offset: number = 400;
@@ -429,6 +442,7 @@ export default defineComponent({
       scrollSwiper,
       swpier_container,
       closeDialog,
+      searchTag,
     };
   },
 });

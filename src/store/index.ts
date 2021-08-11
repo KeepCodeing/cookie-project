@@ -4,7 +4,8 @@ import {
   GET_PAGE_IMAGE,
   LOAD_PAGE_IMAGE,
   UPDATE_PAGINATION,
-  UPDATE_KEYWORD
+  UPDATE_KEYWORD,
+  UPDATE_CAN_BACK
 } from "./type";
 import { GlobalProp } from "./props";
 import { object2Parma } from "../utils/utils";
@@ -15,6 +16,7 @@ export default createStore<GlobalProp>({
     search_prop: { keyword: "all", type: "all", join: "OR", pn: 1, limit: 20 },
     message_box_prop: { type: "成功", show: false, timeout: 1500, message: "" },
     illust_list_prop: null,
+    can_back: 0
   },
   mutations: {
     [UPDATE_KEYWORD](state, { keyword, type }) {
@@ -33,6 +35,9 @@ export default createStore<GlobalProp>({
     [UPDATE_PAGINATION](state, { page }) {
       state.search_prop.pn = page;
     },
+    [UPDATE_CAN_BACK](state, { cnt }) {
+      state.can_back += cnt;
+    }
   },
   actions: {
     async [GET_PAGE_IMAGE]({ commit }, parma) {

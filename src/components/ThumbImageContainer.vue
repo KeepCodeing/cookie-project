@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, reactive, watch } from "vue";
+import { defineComponent, computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 import { GlobalProp } from "../store/props";
@@ -40,6 +40,7 @@ import ImageShowerDialog from "./ImageShowerDialog.vue";
 import Pagination from "./Pagination.vue";
 import {
   GET_PAGE_IMAGE,
+  UPDATE_CAN_BACK,
   UPDATE_KEYWORD,
   UPDATE_PAGINATION,
 } from "../store/type";
@@ -79,6 +80,7 @@ export default defineComponent({
         name: "index",
         query: { keyword: newVal.keyword, pn: newVal.pn, type: newVal.type },
       });
+      store.commit(UPDATE_CAN_BACK, { cnt: 0.5});
     });
 
     const displayImage = (index: number) => {

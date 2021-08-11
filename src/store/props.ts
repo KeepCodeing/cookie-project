@@ -40,4 +40,5 @@ export interface GlobalProp {
  search_prop: SearchProp,   
  message_box_prop: MessageBoxProp,
  illust_list_prop: IllustListProp | null,
+ can_back: number,
 }

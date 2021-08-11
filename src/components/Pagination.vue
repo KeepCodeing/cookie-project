@@ -93,6 +93,151 @@
 			当当前页>=4时，左边1页，中间10页，右边1页 -->
       <!-- 这里是非上述情况的组件展示，这样做的一个好处是
 			可以少写很多JS代码，但坏处也很明显，要多写一个分页 -->
+      <div v-show="!over_page_size">
+        <nav
+          class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+          aria-label="Pagination"
+        >
+          <!-- 上一页 -->
+          <a
+            class="
+              relative
+              inline-flex
+              items-center
+              p-2
+              rounded-l-md
+              border border-gray-300
+              bg-white
+              text-sm
+              font-medium
+              text-gray-500
+              hover:bg-gray-50
+              cursor-pointer
+            "
+            @click="current_page--"
+          >
+            <span class="sr-only">上一页</span>
+            <!-- Heroicon name: solid/chevron-left -->
+            <svg
+              class="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </a>
+          <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
+          <!-- 前n页 -->
+          <a
+            aria-current="page"
+            class="
+              relative
+              inline-flex
+              items-center
+              p-2
+              border
+              text-sm
+              font-medium
+              cursor-pointer
+              text-center
+            "
+            style="width: 50px"
+            v-for="i in p_size"
+            @click="current_page = i"
+            :key="i"
+            :class="current_page === i ? 'current-page' : 'default-page'"
+          >
+            <p style="width: 100%">{{ i }}</p>
+          </a>
+          <!-- 中间省略 -->
+          <span
+            v-show="over_page_size"
+            class="
+              relative
+              inline-flex
+              items-center
+              px-4
+              py-2
+              border border-gray-300
+              bg-white
+              text-sm
+              font-medium
+              text-gray-700
+            "
+          >
+            ...
+          </span>
+          <!-- 后n页 -->
+          <a
+            v-show="over_page_size"
+            aria-current="page"
+            class="
+              z-10
+              bg-indigo-50
+              border-indigo-500
+              text-indigo-600
+              relative
+              inline-flex
+              items-center
+              p-2
+              border
+              text-sm
+              font-medium
+              cursor-pointer
+              text-center
+            "
+            style="width: 50px"
+            v-for="i in p_size"
+            :key="later_page + i"
+            :class="
+              current_page === later_page + i ? 'current-page' : 'default-page'
+            "
+            @click="current_page = later_page + i"
+          >
+            <p style="width: 100%">{{ total_page - p_size + i }}</p>
+          </a>
+          <a
+            class="
+              relative
+              inline-flex
+              items-center
+              px-2
+              py-2
+              rounded-r-md
+              border border-gray-300
+              bg-white
+              text-sm
+              font-medium
+              text-gray-500
+              hover:bg-gray-50
+              cursor-pointer
+            "
+            @click="current_page++"
+          >
+            <span class="sr-only">Next</span>
+            <!-- Heroicon name: solid/chevron-right -->
+            <svg
+              class="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </a>
+        </nav>
+      </div>
       <div v-show="current_page < p_size && over_page_size">
         <nav
           class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
@@ -443,10 +588,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, watch, toRaw, computed } from "vue";
+import {
+  defineComponent,
+  ref,
+  toRefs,
+  reactive,
+  watch,
+  toRaw,
+  computed,
+} from "vue";
 import { showMessageBox } from "../utils/utils";
 import { useStore } from "vuex";
-import { useRoute } from 'vue-router'
+import { useRoute } from "vue-router";
 import { GlobalProp } from "@/store/props";
 import { UPDATE_PAGINATION } from "@/store/type";
 
@@ -465,24 +618,37 @@ export default defineComponent({
       type: Number,
       default: 114514,
       required: true,
-    }
+    },
   },
   setup(props) {
-    const total_count = ref(props.total_count);
-    const total_page = computed(() => Math.ceil(total_count.value / props.page_limit + 0.5));
-    const over_page_size = ref(total_page.value > props.pagination_size);
-    const p_size = ref(
+    const store = useStore<GlobalProp>();
+    const { total_count } = toRefs(props);
+
+    const total_page = computed(() =>
+      Math.round(total_count.value / props.page_limit + 0.5)
+    );
+    const over_page_size = computed(
+      () => total_page.value > props.pagination_size
+    );
+    const p_size = computed(() =>
       over_page_size.value ? props.pagination_size / 2 : total_page.value
     );
 
     const route = useRoute();
-    const store = useStore<GlobalProp>();
 
     const current_page = ref(1);
 
     if (route.query.pn) {
-      current_page.value = parseInt(route.query.pn.toString());
-      store.commit(UPDATE_PAGINATION, { page: route.query.pn });
+      watch(
+        () => route.query.pn,
+        (n, o) => {
+          if (n) {
+            if (current_page.value === parseInt(n.toString())) return;
+            current_page.value = parseInt(n.toString());
+            store.commit(UPDATE_PAGINATION, { page: route.query.pn });
+          }
+        }
+      );
     }
 
     let page_list: number[] = reactive([]);
