@@ -237,6 +237,7 @@ export default defineComponent({
         store.dispatch(REGISTER_ACTION, user_info);
         setTimeout(() => (user_info.code = ""), 300);
       } else {
+        console.log(user_info);
         store.dispatch(LOGIN_ACTION, user_info);
       }
     };
