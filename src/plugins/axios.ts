@@ -1,12 +1,13 @@
 import axios from "axios";
 import store from "@/store";
+import jc from 'js-cookie'
 import { showMessageBox } from "../utils/utils";
 
 const inc = axios;
 inc.defaults.baseURL = "/api";
 
 inc.interceptors.request.use((config) => {
-  const token = sessionStorage.getItem("token");
+  const token = jc.get("token");
   if (token) {
     config.headers.Authorization = token;
   }
