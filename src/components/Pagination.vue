@@ -9,7 +9,6 @@
       border-t border-gray-200
       sm:px-6
     "
-    v-show="total_page > 1"
   >
     <!-- 小屏 -->
     <div class="flex-1 flex justify-between sm:hidden">
@@ -94,7 +93,7 @@
 			当当前页>=4时，左边1页，中间10页，右边1页 -->
       <!-- 这里是非上述情况的组件展示，这样做的一个好处是
 			可以少写很多JS代码，但坏处也很明显，要多写一个分页 -->
-      <div v-show="!over_page_size">
+      <div v-show="!over_page_size && total_page > 1">
         <nav
           class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
           aria-label="Pagination"
@@ -239,7 +238,7 @@
           </a>
         </nav>
       </div>
-      <div v-show="current_page < p_size && over_page_size">
+      <div v-show="current_page < p_size && over_page_size && total_page > 1">
         <nav
           class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
           aria-label="Pagination"
@@ -384,7 +383,7 @@
           </a>
         </nav>
       </div>
-      <div v-show="current_page >= p_size && over_page_size">
+      <div v-show="current_page >= p_size && over_page_size && total_page > 1">
         <nav
           class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
           aria-label="Pagination"

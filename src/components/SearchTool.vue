@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="grid h-full grid-cols-8 grid-rows-2 md:grid-rows-1">
+    <div class="grid h-full grid-cols-9 grid-rows-2 md:grid-rows-1">
       <!-- 输入框 -->
       <input
         v-model="search_data.keyword"
         class="
-          col-span-4
+          col-span-5
           mr-2
           outline-none
           focus:outline-none
@@ -25,6 +25,7 @@
           leading-none
           border-2 border-gray-200
           inline-flex
+          justify-center
           rounded-full
         "
       >
@@ -41,7 +42,7 @@
             hover:text-blue-400
             focus:text-blue-400
             rounded-l-full
-            px-2
+            px-1
             py-1
           "
         >
@@ -77,7 +78,7 @@
             hover:text-blue-400
             focus:text-blue-400
             rounded-r-full
-            px-2
+            px-1
             py-1
           "
         >

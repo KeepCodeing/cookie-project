@@ -1,6 +1,6 @@
 import axios from "axios";
 import store from "@/store";
-import jc from 'js-cookie'
+import jc from "js-cookie";
 import { showMessageBox } from "../utils/utils";
 
 const inc = axios;
@@ -20,20 +20,6 @@ inc.interceptors.response.use(
   },
   (error) => {
     const status = error.response.status;
-
-    if (status === 200) {
-      
-      // showMessageBox(
-      //   {
-      //     timeout: 700,
-      //     type: isFav ? "成功" : "警告",
-      //     show: true,
-      //     message: isFav ? "静画，喜欢！" : "已经坏掉了，我的心意（取消喜欢成功）...",
-      //   },
-      //   store
-      // );
-    }
-
     if (status === 401) {
       showMessageBox(
         {
@@ -48,7 +34,12 @@ inc.interceptors.response.use(
     }
 
     if (status !== 200) {
-      const msg = error.response.data.detail.message;
+      let msg = '';
+      if (error.response.data.detail) {
+        msg = error.response.data.detail.message;
+      } else if (status === 500) {
+        msg = "服务器错误，请尝试使用备用站！";
+      }
       showMessageBox(
         {
           timeout: 1500,

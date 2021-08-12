@@ -2,7 +2,8 @@
   <div v-if="illustData !== null">
     <div
       v-bind="$attrs"
-      class="grid md:grid-cols-4 px-2 md:grid-rows-5 gap-3 grid-cols-2"
+      class="grid md:grid-cols-4 px-2 gap-3 grid-cols-2"
+      
     >
       <template v-for="(item, idx) in illustData.data" :key="idx">
         <div

@@ -183,7 +183,7 @@
                 <div class="py-1 text-lg text-gray-800">简介</div>
                 <div
                   v-html="illustData[currentIndex].description"
-                  class="text-base text-gray-500"
+                  class="text-base break-all text-gray-500"
                 ></div>
               </div>
               <!-- 静画id -->
