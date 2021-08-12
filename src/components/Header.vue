@@ -13,7 +13,8 @@
     <div class="col-span-4 hidden md:block">
       <slot name="search_tool"><search-tool /></slot>
     </div>
-    <div class="col-span-3 text-gray-400 text-right mr-3 col-start-9">
+    <!--  md:col-start-9 -->
+    <div class="md:col-span-3 col-span-7 text-gray-400 text-right mr-3">
       <span
         @click="window.open('http://121.5.133.245/')"
         class="hover:text-blue-400 cursor-pointer"
