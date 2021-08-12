@@ -9,6 +9,7 @@ import {
   LOGIN_ACTION,
   UPDATE_USER_STATUS,
   REGISTER_ACTION,
+  LIKE_IMAGE_ACTION,
 } from "./type";
 import { GlobalProp } from "./props";
 import { object2Parma, showMessageBox } from "../utils/utils";
@@ -82,6 +83,15 @@ export default createStore<GlobalProp>({
           },
           this
         );
+      } catch {}
+    },
+    async [LIKE_IMAGE_ACTION]({ commit }, sid) {
+      try {
+        await axios({
+          method: "post",
+          url: '/favorite',
+          data: sid,
+        });
       } catch {}
     },
   },

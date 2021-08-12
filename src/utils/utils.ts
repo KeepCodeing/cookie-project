@@ -1,5 +1,6 @@
 import { SearchProp, MessageBoxProp } from "@/store/props";
 import { SHOW_MESSAGE_BOX } from "@/store/type";
+import axios from "axios";
 
 export const createTeleportElement = (eid: Array<string>) => {
   eid.map((id) => {
@@ -26,3 +27,23 @@ export const object2Parma = (parma: SearchProp) =>
         return key + "=" + parma[key];
     })
     .join("&");
+
+export const download = (cdn_url: string) => {
+  axios({
+    url: cdn_url,
+    method: "get",
+    responseType: "blob",
+  }).then((data) => {
+    const url = window.URL.createObjectURL(new Blob([data.data]));
+    const link = document.createElement("a");
+    const imageName = cdn_url.substr(cdn_url.lastIndexOf('/') + 1);
+
+    link.style.display = "none";
+    link.href = url;
+    link.setAttribute("download", imageName);
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+};

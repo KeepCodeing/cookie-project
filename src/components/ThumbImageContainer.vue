@@ -75,12 +75,16 @@ export default defineComponent({
     store.dispatch(GET_PAGE_IMAGE, searchData);
 
     watch(searchData.value, (newVal, oldVal) => {
-      store.dispatch(GET_PAGE_IMAGE, searchData);
-      router.push({
-        name: "index",
-        query: { keyword: newVal.keyword, pn: newVal.pn, type: newVal.type },
-      });
-      store.commit(UPDATE_CAN_BACK, { cnt: 0.5});
+      if (newVal.type === "like") {
+        
+      } else {
+        store.dispatch(GET_PAGE_IMAGE, searchData);
+        router.push({
+          name: "index",
+          query: { keyword: newVal.keyword, pn: newVal.pn, type: newVal.type },
+        });
+      }
+      store.commit(UPDATE_CAN_BACK, { cnt: 0.5 });
     });
 
     const displayImage = (index: number) => {

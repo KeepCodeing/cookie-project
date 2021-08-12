@@ -1,6 +1,6 @@
 export interface SearchProp {
     keyword: string,
-    type: 'username' | 'tags' | 'sid' | 'all' | 'userid',
+    type: 'username' | 'tags' | 'sid' | 'all' | 'userid' | 'like',
     join: 'OR' | 'AND',
     pn: number,
     limit: number

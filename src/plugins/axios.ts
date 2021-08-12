@@ -15,10 +15,37 @@ inc.interceptors.request.use((config) => {
 
 inc.interceptors.response.use(
   (config) => {
+    console.log(config);
     return config;
   },
   (error) => {
     const status = error.response.status;
+
+    if (status === 200) {
+      
+      // showMessageBox(
+      //   {
+      //     timeout: 700,
+      //     type: isFav ? "成功" : "警告",
+      //     show: true,
+      //     message: isFav ? "静画，喜欢！" : "已经坏掉了，我的心意（取消喜欢成功）...",
+      //   },
+      //   store
+      // );
+    }
+
+    if (status === 401) {
+      showMessageBox(
+        {
+          timeout: 1500,
+          type: "错误",
+          show: true,
+          message: "给我登陆，三回啊三回！",
+        },
+        store
+      );
+      return;
+    }
 
     if (status !== 200) {
       const msg = error.response.data.detail.message;
@@ -27,7 +54,7 @@ inc.interceptors.response.use(
           timeout: 1500,
           type: "错误",
           show: true,
-          message: msg ? msg : '未知错误，刷新，请w...',
+          message: msg ? msg : "未知错误，刷新，请w...",
         },
         store
       );

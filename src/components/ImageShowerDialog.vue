@@ -148,11 +148,14 @@
                 md:col-span-2
                 md:row-span-4
                 break-words
+                relative
+                grid-row-6
                 white-space-nowarp
+                grid
               "
             >
               <!-- 作者 -->
-              <div class="pb-2">
+              <div class="row-span-1 pb-2">
                 <div class="py-1 text-lg text-gray-800">作者</div>
                 <div class="text-blue-500 text-base">
                   <span
@@ -168,14 +171,14 @@
                 </div>
               </div>
               <!-- 标题 -->
-              <div class="pb-2">
+              <div class="row-span-1 pb-2">
                 <div class="py-1 text-lg text-gray-800">标题</div>
                 <div class="text-base text-gray-500">
                   {{ illustData[currentIndex].title }}
                 </div>
               </div>
               <!-- 简介 -->
-              <div class="pb-2">
+              <div class="row-span-2 pb-2">
                 <div class="py-1 text-lg text-gray-800">简介</div>
                 <div
                   v-html="illustData[currentIndex].description"
@@ -183,7 +186,7 @@
                 ></div>
               </div>
               <!-- 静画id -->
-              <div class="pb-2">
+              <div class="row-span-1 pb-2">
                 <div class="py-1 text-lg text-gray-800">静画id</div>
                 <div class="text-blue-500 text-base">
                   <span
@@ -199,18 +202,25 @@
                 </div>
               </div>
               <!-- 投稿时间 -->
-              <div class="pb-2">
+              <div class="pb-2 row-span-1">
                 <div class="py-1 text-lg text-gray-800">投稿时间</div>
                 <div class="text-base text-gray-500">
                   {{ illustData[currentIndex].updated }}
                 </div>
               </div>
               <!-- 标签 -->
-              <div class="pb-2">
+              <div class="pb-2 row-span-3">
                 <div class="py-1 text-lg text-gray-800">标签</div>
                 <span
                   v-for="(tag, idx) in illustData[currentIndex].tags"
-                  @click="searchTag(tag, idx === illustData[currentIndex].tags.length - 1 ? illustData[currentIndex].user_id : '')"
+                  @click="
+                    searchTag(
+                      tag,
+                      idx === illustData[currentIndex].tags.length - 1
+                        ? illustData[currentIndex].user_id
+                        : ''
+                    )
+                  "
                   :key="idx"
                   class="inline-flex cursor-pointer mr-1 mb-2"
                   ><span
@@ -229,11 +239,76 @@
                   ></span
                 >
               </div>
-              <!-- 收藏数 -->
-              <div class="pb-2">
-                <div class="py-1 text-lg text-gray-800">收藏数</div>
-                <div class="text-base text-gray-500">
-                  {{ illustData[currentIndex].favorite }}
+              <!-- 收藏/下载/原图 -->
+              <div class="flex py-2 w-full row-span-1">
+                <div class="w-2/6">
+                  收藏人数:{{ illustData[currentIndex].favorite }}
+                </div>
+                <div class="w-2/3 flex justify-end">
+                  <svg
+                    class="ml-1 cursor-pointer"
+                    style="width: 37px; height: 37px"
+                    viewBox="0 0 37 37"
+                  >
+                    <path
+                      @mouseenter="iconColor.download = true"
+                      @mouseleave="iconColor.download = false"
+                      @click="
+                        downloadShowImage(
+                          illustData[currentIndex].cdn_url,
+                          'download'
+                        )
+                      "
+                      :fill="
+                        !iconColor.download
+                          ? 'rgb(55, 65, 81)'
+                          : 'rgb(239, 68, 68)'
+                      "
+                      d="M17,13L12,18L7,13H10V9H14V13M19.35,10.03C18.67,6.59 15.64,4 12,4C9.11,4 6.6,5.64 5.35,8.03C2.34,8.36 0,10.9 0,14A6,6 0 0,0 6,20H19A5,5 0 0,0 24,15C24,12.36 21.95,10.22 19.35,10.03Z"
+                    />
+                  </svg>
+                  <svg
+                    class="ml-1 cursor-pointer"
+                    style="width: 37px; height: 37px"
+                    viewBox="0 0 37 37"
+                  >
+                    <path
+                      @mouseenter="iconColor.view = true"
+                      @mouseleave="iconColor.view = false"
+                      @click="
+                        downloadShowImage(
+                          illustData[currentIndex].cdn_url,
+                          'show'
+                        )
+                      "
+                      :fill="
+                        !iconColor.view ? 'rgb(55, 65, 81)' : 'rgb(239, 68, 68)'
+                      "
+                      d="M9,2A7,7 0 0,1 16,9C16,10.57 15.5,12 14.61,13.19L15.41,14H16L22,20L20,22L14,16V15.41L13.19,14.61C12,15.5 10.57,16 9,16A7,7 0 0,1 2,9A7,7 0 0,1 9,2M8,5V8H5V10H8V13H10V10H13V8H10V5H8Z"
+                    />
+                  </svg>
+                  <svg
+                    class="ml-1 gray- cursor-pointer"
+                    style="width: 37px; height: 37px"
+                    viewBox="0 0 37 37"
+                  >
+                    <path
+                      @mouseenter="iconColor.like = true"
+                      @mouseleave="iconColor.like = false"
+                      @click="
+                        favImage(illustData[currentIndex].sid, currentIndex)
+                      "
+                      :fill="
+                        userStatus.isLogin
+                          ? !iconColor.like &&
+                            !illustData[currentIndex].favorited
+                            ? 'rgb(55, 65, 81)'
+                            : 'rgb(239, 68, 68)'
+                          : 'rgb(107, 114, 128)'
+                      "
+                      d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"
+                    />
+                  </svg>
                 </div>
               </div>
             </div>
@@ -331,11 +406,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, watch, toRefs, ref, onMounted } from "vue";
-import { IllustProp } from "../store/props";
+import {
+  defineComponent,
+  PropType,
+  watch,
+  toRefs,
+  ref,
+  onMounted,
+  reactive,
+  computed,
+} from "vue";
+import { IllustProp, GlobalProp } from "../store/props";
 import ThumbImage from "./ThumbImage.vue";
-import { useStore } from 'vuex'
-import { UPDATE_KEYWORD } from "@/store/type";
+import { useStore } from "vuex";
+import { LIKE_IMAGE_ACTION, UPDATE_KEYWORD } from "@/store/type";
+import { download, showMessageBox } from "@/utils/utils";
 
 export default defineComponent({
   components: { ThumbImage },
@@ -364,7 +449,13 @@ export default defineComponent({
     const thumb_url = ref("");
     const swpier_container = ref<HTMLElement | null>(null);
     const illustLen = illustData.value.length;
-    const store = useStore();
+    const store = useStore<GlobalProp>();
+    const userStatus = computed(() => store.state.use_status_prop);
+    const iconColor = reactive({
+      download: false,
+      view: false,
+      like: false,
+    });
 
     const color_list = [
       "red",
@@ -423,12 +514,60 @@ export default defineComponent({
 
     const searchTag = (tag: string, type: string) => {
       if (!type) {
-        store.commit(UPDATE_KEYWORD, { keyword: tag, type: 'tags' });
+        store.commit(UPDATE_KEYWORD, { keyword: tag, type: "tags" });
       } else {
-        store.commit(UPDATE_KEYWORD, { keyword: type, type: 'userid' });
+        store.commit(UPDATE_KEYWORD, { keyword: type, type: "userid" });
       }
       closeDialog();
-    }
+    };
+
+    const downloadShowImage = (cdn_url: string, type: string) => {
+      if (type === "show") {
+        window.open(cdn_url);
+      } else {
+        download(cdn_url);
+        showMessageBox(
+          {
+            timeout: 500,
+            type: "成功",
+            show: true,
+            message: "已经开始了！（指下载）",
+          },
+          store
+        );
+      }
+    };
+
+    const favImage = (sid: string, currentIndex: number) => {
+      if (!userStatus.value.isLogin) {
+        showMessageBox(
+          {
+            timeout: 700,
+            type: "警告",
+            show: true,
+            message: "给我登陆三回，三回啊！",
+          },
+          store
+        );
+        return;
+      }
+      iconColor.like = true;
+      illustData.value[currentIndex].favorited =
+        !illustData.value[currentIndex].favorited;
+      const isFav = illustData.value[currentIndex].favorited;
+      showMessageBox(
+        {
+          timeout: 700,
+          type: isFav ? "成功" : "警告",
+          show: true,
+          message: isFav
+            ? "静画，喜欢！"
+            : "已经坏掉了，我的心意（取消喜欢成功）...",
+        },
+        store
+      );
+      store.dispatch(LIKE_IMAGE_ACTION, { image_id: sid });
+    };
 
     const scrollSwiper = (to: string) => {
       const timeout: number = 10;
@@ -456,6 +595,10 @@ export default defineComponent({
       swpier_container,
       closeDialog,
       searchTag,
+      iconColor,
+      downloadShowImage,
+      favImage,
+      userStatus,
     };
   },
 });

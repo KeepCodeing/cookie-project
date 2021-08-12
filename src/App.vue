@@ -8,7 +8,10 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { createTeleportElement } from "./utils/utils";
+import { useStore } from 'vuex'
 import MessageBox from "./components/MessageBox.vue";
+import { GlobalProp } from "./store/props";
+import { UPDATE_USER_STATUS } from "./store/type";
 
 export default defineComponent({
   components: {
@@ -16,6 +19,11 @@ export default defineComponent({
   },
   setup() {
     createTeleportElement(["image_shower_dialog", "message_box"]);
+    const store = useStore<GlobalProp>();
+    const token = sessionStorage.getItem('token');
+    if (sessionStorage.getItem('token')) {
+      store.commit(UPDATE_USER_STATUS, { token, isLogin: true});
+    }
     return {};
   },
 });

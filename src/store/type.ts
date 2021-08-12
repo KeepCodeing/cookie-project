@@ -14,3 +14,7 @@ export const LOGIN_ACTION: string = 'loginAction';
 export const UPDATE_USER_STATUS: string = 'updateUserStatus';
 
 export const REGISTER_ACTION: string = 'registerAction';
+
+export const LIKE_IMAGE_ACTION: string = 'likeImageAction';
+
+export const GET_LIKE_IMAGE: string = 'getLikeImage';
