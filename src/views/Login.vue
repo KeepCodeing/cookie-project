@@ -131,7 +131,7 @@
               href="#"
               class="font-medium text-indigo-600 hover:text-indigo-500"
             >
-              忘记密码？
+              本站不提供密码找回功能，不要学UDK姐贵哦w
             </a>
           </div>
         </div>
