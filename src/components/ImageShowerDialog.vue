@@ -153,6 +153,7 @@
                 white-space-nowarp
                 grid
               "
+              v-if="illustData[currentIndex]"
             >
               <!-- 作者 -->
               <div class="row-span-1 pb-2">
@@ -166,7 +167,7 @@
                       )
                     "
                     class="cursor-pointer"
-                    >{{ illustData[index].username }}</span
+                    >{{ illustData[currentIndex].username }}</span
                   >
                 </div>
               </div>
@@ -296,7 +297,7 @@
                       @mouseenter="iconColor.like = true"
                       @mouseleave="iconColor.like = false"
                       @click="
-                        favImage(illustData[currentIndex].sid, currentIndex)
+                        favImage(illustData[currentIndex].id, currentIndex)
                       "
                       :fill="
                         userStatus.isLogin
@@ -380,21 +381,27 @@
                   </svg>
                 </div>
                 <div class="h-full flex">
-                  <div
-                    :key="idx"
-                    v-for="(img, idx) in illustData"
-                    class="h-full w-40 m-0.5 bg-white flex-shrink-0 flex-grow-0"
-                    :class="{
-                      'border-yellow-400 border-4': currentIndex === idx,
-                    }"
-                  >
-                    <thumb-image
-                      @display-image="displayImage"
-                      :small="true"
-                      :sid="img.sid"
-                      :index="idx"
-                    />
-                  </div>
+                  <template v-for="(img, idx) in illustData" :key="idx">
+                    <div
+                      class="
+                        h-full
+                        w-40
+                        m-0.5
+                        bg-white
+                        flex-shrink-0 flex-grow-0
+                      "
+                      :class="{
+                        'border-yellow-400 border-4': currentIndex === idx,
+                      }"
+                    >
+                      <thumb-image
+                        @display-image="displayImage"
+                        :small="true"
+                        :sid="img.sid"
+                        :index="idx"
+                      />
+                    </div>
+                  </template>
                 </div>
               </div>
             </div>
@@ -417,6 +424,7 @@ import {
   computed,
 } from "vue";
 import { IllustProp, GlobalProp } from "../store/props";
+import { useRoute } from 'vue-router'
 import ThumbImage from "./ThumbImage.vue";
 import { useStore } from "vuex";
 import { LIKE_IMAGE_ACTION, UPDATE_KEYWORD } from "@/store/type";
@@ -450,6 +458,7 @@ export default defineComponent({
     const swpier_container = ref<HTMLElement | null>(null);
     const illustLen = illustData.value.length;
     const store = useStore<GlobalProp>();
+    const route = useRoute();
     const userStatus = computed(() => store.state.use_status_prop);
     const iconColor = reactive({
       download: false,
@@ -471,6 +480,7 @@ export default defineComponent({
     // 用来修复不同页点击相同位置图片图片不更新的错误
     // 因为这个差点摆烂
     watch(illustData, (n, o) => {
+      if (!n[currentIndex.value]) return;
       image_url.value =
         "https://lohas.nicoseiga.jp/thumb/" + n[currentIndex.value].sid + "i";
       thumb_url.value = image_url.value;
@@ -538,14 +548,15 @@ export default defineComponent({
       }
     };
 
-    const favImage = (sid: string, currentIndex: number) => {
+
+    const favImage = (id: number, currentIndex: number) => {
       if (!userStatus.value.isLogin) {
         showMessageBox(
           {
             timeout: 700,
             type: "警告",
             show: true,
-            message: "给我登陆三回，三回啊！",
+            message: "请登陆后使用收藏功能！",
           },
           store
         );
@@ -560,13 +571,12 @@ export default defineComponent({
           timeout: 700,
           type: isFav ? "成功" : "警告",
           show: true,
-          message: isFav
-            ? "静画，喜欢！"
-            : "已经坏掉了，我的心意（取消喜欢成功）...",
+          message: isFav ? "收藏静画成功" : "取消收藏成功",
         },
         store
       );
-      store.dispatch(LIKE_IMAGE_ACTION, { image_id: sid });
+      illustData.value[currentIndex].favorite += isFav ? 1 : -1;
+      store.dispatch(LIKE_IMAGE_ACTION, { image_id: id });
     };
 
     const scrollSwiper = (to: string) => {

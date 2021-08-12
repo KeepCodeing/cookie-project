@@ -15,7 +15,6 @@ inc.interceptors.request.use((config) => {
 
 inc.interceptors.response.use(
   (config) => {
-    console.log(config);
     return config;
   },
   (error) => {

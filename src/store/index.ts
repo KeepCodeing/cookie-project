@@ -10,9 +10,11 @@ import {
   UPDATE_USER_STATUS,
   REGISTER_ACTION,
   LIKE_IMAGE_ACTION,
+  GET_LIKE_IMAGE,
+  GET_USER_AUTH
 } from "./type";
 import { GlobalProp } from "./props";
-import { object2Parma, showMessageBox } from "../utils/utils";
+import { showMessageBox } from "../utils/utils";
 import axios from "../plugins/axios";
 
 export default createStore<GlobalProp>({
@@ -51,7 +53,8 @@ export default createStore<GlobalProp>({
     async [GET_PAGE_IMAGE]({ commit }, parma) {
       const { data } = await axios({
         method: "get",
-        url: `/search?${object2Parma(parma.value)}`,
+        url: `/search`,
+        params: parma
       });
       commit(LOAD_PAGE_IMAGE, data);
     },
@@ -85,15 +88,30 @@ export default createStore<GlobalProp>({
         );
       } catch {}
     },
-    async [LIKE_IMAGE_ACTION]({ commit }, sid) {
+    async [LIKE_IMAGE_ACTION]({ commit }, id) {
       try {
         await axios({
           method: "post",
           url: '/favorite',
-          data: sid,
+          data: id,
         });
       } catch {}
     },
+    async [GET_LIKE_IMAGE]({ commit }, { pn, limit }) {
+      const { data } = await axios({
+        method: 'get',
+        url: '/favorites',
+        params: { pn, limit }
+      });
+      commit(LOAD_PAGE_IMAGE, data);
+    },
+    async [GET_USER_AUTH]({ commit }, { token }) {
+      const { data } = await axios({
+        method: 'post',
+        url: '/auth/me'
+      });
+      commit(UPDATE_USER_STATUS, { isLogin: data.uid !== undefined, token });
+    }
   },
   modules: {},
 });

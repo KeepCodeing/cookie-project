@@ -9,6 +9,7 @@
       border-t border-gray-200
       sm:px-6
     "
+    v-show="total_page > 1"
   >
     <!-- 小屏 -->
     <div class="flex-1 flex justify-between sm:hidden">

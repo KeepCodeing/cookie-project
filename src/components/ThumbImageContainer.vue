@@ -4,17 +4,17 @@
       v-bind="$attrs"
       class="grid md:grid-cols-4 px-2 md:grid-rows-5 gap-3 grid-cols-2"
     >
-      <div
-        class="col-span-1 flex justify-center row-span-1"
-        v-for="(item, idx) in illustData.data"
-        :key="idx"
-      >
-        <thumb-image
-          @display-image="displayImage"
-          :index="idx"
-          :sid="item.sid"
-        />
-      </div>
+      <template v-for="(item, idx) in illustData.data" :key="idx">
+        <div
+          class="col-span-1 flex justify-center row-span-1"
+        >
+          <thumb-image
+            @display-image="displayImage"
+            :index="idx"
+            :sid="item.sid"
+          />
+        </div>
+      </template>
     </div>
     <image-shower-dialog
       @close-dialog="closeDialog"
@@ -28,6 +28,20 @@
       :pagination_size="12"
     />
   </div>
+  <div
+    class="
+      transform
+      absolute
+      -translate-x-1/2 -translate-y-1/2
+      top-1/2
+      text-xl text-gray-400
+      font-bold
+      left-1/2
+    "
+    v-show="illustData !== null && !illustData.data.length"
+  >
+    这↑里↓还什么都没有呢...
+  </div>
 </template>
 
 <script lang="ts">
@@ -39,6 +53,7 @@ import ThumbImage from "./ThumbImage.vue";
 import ImageShowerDialog from "./ImageShowerDialog.vue";
 import Pagination from "./Pagination.vue";
 import {
+  GET_LIKE_IMAGE,
   GET_PAGE_IMAGE,
   UPDATE_CAN_BACK,
   UPDATE_KEYWORD,
@@ -63,6 +78,12 @@ export default defineComponent({
     const page_limit = searchData.value.limit;
     const router = useRouter();
     const route = useRoute();
+    // const likePage = computed(() => {
+    //   if (route.query.type === 'like') {
+
+    //   }
+    //   return true;
+    // });
 
     if (route.query.keyword && route.query.pn && route.query.type) {
       store.commit(UPDATE_KEYWORD, {
@@ -72,18 +93,35 @@ export default defineComponent({
       store.commit(UPDATE_PAGINATION, { page: route.query.pn });
     }
 
-    store.dispatch(GET_PAGE_IMAGE, searchData);
+    store.dispatch(GET_PAGE_IMAGE, searchData.value);
 
     watch(searchData.value, (newVal, oldVal) => {
-      if (newVal.type === "like") {
-        
-      } else {
-        store.dispatch(GET_PAGE_IMAGE, searchData);
-        router.push({
-          name: "index",
-          query: { keyword: newVal.keyword, pn: newVal.pn, type: newVal.type },
-        });
-      }
+      // if (newVal.type === "like") {
+      //   store.dispatch(GET_LIKE_IMAGE, searchData);
+      //   router.push({
+      //     name: "index",
+      //     query: { keyword: newVal.keyword, pn: newVal.pn, type: newVal.type },
+      //   });
+      // } else {
+      //   store.dispatch(GET_PAGE_IMAGE, searchData);
+      //   router.push({
+      //     name: "index",
+      //     query: { keyword: newVal.keyword, pn: newVal.pn, type: newVal.type },
+      //   });
+      // }
+      // console.log(newVal);
+      store.dispatch(
+        newVal.type !== "like" ? GET_PAGE_IMAGE : GET_LIKE_IMAGE,
+        searchData.value
+      );
+      router.push({
+        name: "index",
+        query: {
+          keyword: newVal.keyword,
+          pn: newVal.pn,
+          type: newVal.type,
+        },
+      });
       store.commit(UPDATE_CAN_BACK, { cnt: 0.5 });
     });
 

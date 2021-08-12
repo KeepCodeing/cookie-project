@@ -148,7 +148,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, watch, toRefs } from "vue";
+import { computed, defineComponent, reactive, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { GlobalProp } from "../store/props";
@@ -174,18 +174,32 @@ export default defineComponent({
         type: search_data.type,
       });
     }
-    const { keyword, type } = toRefs(route.query);
-    watch(() => route.query.keyword, (n, o) => {
-      if (n && route.query && route.query.type) {
-        
-        search_data.keyword = n.toString();
-        search_data.type = route.query.type.toString();
-        store.commit(UPDATE_KEYWORD, {
-          keyword: search_data.keyword,
-          type: search_data.type,
-        });
+    watch(
+      () => route.query.type,
+      (n, o) => {
+        if (n && route.query && route.query.keyword) {
+          search_data.type = n.toString();
+          search_data.keyword = route.query.keyword.toString();
+          store.commit(UPDATE_KEYWORD, {
+            keyword: search_data.keyword,
+            type: search_data.type,
+          });
+        }
       }
-    });
+    );
+    watch(
+      () => route.query.keyword,
+      (n, o) => {
+        if (n && route.query && route.query.type) {
+          search_data.keyword = n.toString();
+          search_data.type = route.query.type.toString();
+          store.commit(UPDATE_KEYWORD, {
+            keyword: search_data.keyword,
+            type: search_data.type,
+          });
+        }
+      }
+    );
 
     const commitSearch = () => {
       if (search_data.keyword === "") return;

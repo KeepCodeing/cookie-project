@@ -11,7 +11,7 @@ import { createTeleportElement } from "./utils/utils";
 import { useStore } from 'vuex'
 import MessageBox from "./components/MessageBox.vue";
 import { GlobalProp } from "./store/props";
-import { UPDATE_USER_STATUS } from "./store/type";
+import { GET_USER_AUTH } from "./store/type";
 
 export default defineComponent({
   components: {
@@ -22,7 +22,7 @@ export default defineComponent({
     const store = useStore<GlobalProp>();
     const token = sessionStorage.getItem('token');
     if (sessionStorage.getItem('token')) {
-      store.commit(UPDATE_USER_STATUS, { token, isLogin: true});
+      store.dispatch(GET_USER_AUTH, { token });
     }
     return {};
   },

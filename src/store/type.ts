@@ -18,3 +18,6 @@ export const REGISTER_ACTION: string = 'registerAction';
 export const LIKE_IMAGE_ACTION: string = 'likeImageAction';
 
 export const GET_LIKE_IMAGE: string = 'getLikeImage';
+export const LOAD_LIKE_IMAGE: string = 'loadLikeImage';
+
+export const GET_USER_AUTH: string = 'getUserAuth';

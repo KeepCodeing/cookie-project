@@ -25,7 +25,7 @@ export interface IllustProp {
     tags: string[],
     cdn_url: string,
     updated: string,
-    favorite?: number,
+    favorite: number,
     favorited?: boolean
 }
 
@@ -34,7 +34,8 @@ export interface UserStatusProp {
     isLogin: boolean
 }
 
-export interface IllustListProp {
+ export declare interface IllustListProp {
+    [key: number]: any,
     code: number,
     message: string,
     count: number,
