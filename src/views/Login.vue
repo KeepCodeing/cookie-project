@@ -110,8 +110,6 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center">
             <input
-              id="remember-me"
-              name="remember-me"
               type="checkbox"
               class="
                 h-4
@@ -121,6 +119,7 @@
                 border-gray-300
                 rounded
               "
+              v-model="user_info.remember"
             />
             <label for="remember-me" class="ml-2 block text-sm text-gray-900">
               记住我
@@ -190,7 +189,6 @@ import { showMessageBox } from "../utils/utils";
 import { useStore } from "vuex";
 import { GlobalProp } from "@/store/props";
 import { LOGIN_ACTION, REGISTER_ACTION } from "@/store/type";
-import qs from "qs";
 import router from "@/router";
 
 export default defineComponent({
@@ -201,6 +199,7 @@ export default defineComponent({
       username: "",
       password: "",
       code: "",
+      remember: false,
     });
     watch(
       () => userStatus.value.isLogin,
@@ -236,15 +235,9 @@ export default defineComponent({
       }
       if (user_info.code) {
         store.dispatch(REGISTER_ACTION, user_info);
-        setTimeout(() => user_info.code = '', 300);
+        setTimeout(() => (user_info.code = ""), 300);
       } else {
-        store.dispatch(
-          LOGIN_ACTION,
-          qs.stringify({
-            username: user_info.username,
-            password: user_info.password,
-          })
-        );
+        store.dispatch(LOGIN_ACTION, user_info);
       }
     };
     return {

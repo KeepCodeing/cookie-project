@@ -9,6 +9,7 @@
   "dependencies": {
     "@tailwindcss/postcss7-compat": "^2.0.2",
     "autoprefixer": "^9",
+    "js-cookie": "^3.0.0",
     "mitt": "^3.0.0",
     "postcss": "^7",
     "qs": "^6.10.1",
@@ -18,6 +19,7 @@
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
+    "@types/js-cookie": "^2.2.7",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-plugin-vuex": "^4.5.13",

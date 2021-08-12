@@ -12,6 +12,7 @@ import { useStore } from 'vuex'
 import MessageBox from "./components/MessageBox.vue";
 import { GlobalProp } from "./store/props";
 import { GET_USER_AUTH } from "./store/type";
+import jc from 'js-cookie'
 
 export default defineComponent({
   components: {
@@ -20,8 +21,8 @@ export default defineComponent({
   setup() {
     createTeleportElement(["image_shower_dialog", "message_box"]);
     const store = useStore<GlobalProp>();
-    const token = sessionStorage.getItem('token');
-    if (sessionStorage.getItem('token')) {
+    const token = jc.get('token');
+    if (token) {
       store.dispatch(GET_USER_AUTH, { token });
     }
     return {};

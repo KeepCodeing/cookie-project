@@ -11,11 +11,13 @@ import {
   REGISTER_ACTION,
   LIKE_IMAGE_ACTION,
   GET_LIKE_IMAGE,
-  GET_USER_AUTH
+  GET_USER_AUTH,
 } from "./type";
 import { GlobalProp } from "./props";
 import { showMessageBox } from "../utils/utils";
 import axios from "../plugins/axios";
+import qs from "qs";
+import jc from 'js-cookie'
 
 export default createStore<GlobalProp>({
   state: {
@@ -54,7 +56,7 @@ export default createStore<GlobalProp>({
       const { data } = await axios({
         method: "get",
         url: `/search`,
-        params: parma
+        params: parma,
       });
       commit(LOAD_PAGE_IMAGE, data);
     },
@@ -63,10 +65,13 @@ export default createStore<GlobalProp>({
         const { data } = await axios({
           method: "post",
           url: "/auth/login",
-          data: userinfo,
+          data: qs.stringify({
+            username: userinfo.username,
+            password: userinfo.password,
+          }),
         });
         const token = data.token_type + " " + data.access_token;
-        sessionStorage.setItem("token", token);
+        jc.set('token', token, { expires: userinfo.remeber ? 7 : 1 });
         commit(UPDATE_USER_STATUS, { isLogin: true, token });
       } catch {}
     },
@@ -92,26 +97,30 @@ export default createStore<GlobalProp>({
       try {
         await axios({
           method: "post",
-          url: '/favorite',
+          url: "/favorite",
           data: id,
         });
       } catch {}
     },
     async [GET_LIKE_IMAGE]({ commit }, { pn, limit }) {
       const { data } = await axios({
-        method: 'get',
-        url: '/favorites',
-        params: { pn, limit }
+        method: "get",
+        url: "/favorites",
+        params: { pn, limit },
       });
       commit(LOAD_PAGE_IMAGE, data);
     },
     async [GET_USER_AUTH]({ commit }, { token }) {
       const { data } = await axios({
-        method: 'post',
-        url: '/auth/me'
+        method: "post",
+        url: "/auth/me",
       });
-      commit(UPDATE_USER_STATUS, { isLogin: data.uid !== undefined, token });
-    }
+      if (data.uid !== undefined) {
+        commit(UPDATE_USER_STATUS, { isLogin: true, token });
+      } else {
+        jc.remove('token');
+      }
+    },
   },
   modules: {},
 });
