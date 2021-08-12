@@ -71,7 +71,7 @@ export default createStore<GlobalProp>({
           }),
         });
         const token = data.token_type + " " + data.access_token;
-        jc.set('token', token, { expires: userinfo.remember ? 7 : 1 });
+        jc.set('token', token, { expires: userinfo.remember ? 30 : 1 });
         commit(UPDATE_USER_STATUS, { isLogin: true, token });
       } catch {}
     },
