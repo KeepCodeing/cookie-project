@@ -4,6 +4,7 @@ import jc from "js-cookie";
 import { showMessageBox } from "../utils/utils";
 
 const inc = axios;
+inc.defaults.timeout = 5000;
 inc.defaults.baseURL =
   process.env.NODE_ENV === "development" ? "/api" : "https://udkisangel.ml/api";
 
@@ -20,6 +21,18 @@ inc.interceptors.response.use(
     return config;
   },
   (error) => {
+    if (!error.response) {
+      showMessageBox(
+        {
+          timeout: 1500,
+          type: "错误",
+          show: true,
+          message: "请求超时，请尝试使用备用站！",
+        },
+        store
+      );
+      return;
+    }
     const status = error.response.status;
     if (status === 401) {
       showMessageBox(

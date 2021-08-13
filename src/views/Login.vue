@@ -121,7 +121,7 @@
               "
               v-model="user_info.remember"
             />
-            <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+            <label for="remember-me" class="ml-2 text-xs md:text-base block text-gray-900">
               记住我
             </label>
           </div>
@@ -129,7 +129,7 @@
           <div class="text-sm">
             <a
               href="#"
-              class="font-medium text-indigo-600 hover:text-indigo-500"
+              class="font-medium text-xs md:text-base text-indigo-600 hover:text-indigo-500"
             >
               本站不提供密码找回功能，不要学UDK姐贵哦w
             </a>
@@ -180,7 +180,6 @@
       </form>
     </div>
   </div>
-  {{ userStatus }}
 </template>
 
 <script lang="ts">

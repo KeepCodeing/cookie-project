@@ -27,7 +27,7 @@
           hover:bg-gray-50
           cursor-pointer
         "
-        @click="current_page++"
+        @click="current_page--"
       >
         <span class="sr-only">上一页</span>
         <!-- Heroicon name: solid/chevron-left -->
@@ -61,7 +61,7 @@
           hover:bg-gray-50
           cursor-pointer
         "
-        @click="current_page--"
+        @click="current_page++"
       >
         <span class="sr-only">下一页</span>
         <!-- Heroicon name: solid/chevron-right -->

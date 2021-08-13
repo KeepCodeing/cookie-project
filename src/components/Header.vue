@@ -3,7 +3,7 @@
     class="h-16 items-center grid grid-cols-10 shadow"
     style="background: rgb(238, 238, 238)"
   >
-    <div class="ml-3 col-span-3 text-lg cursor-pointer">
+    <div class="ml-3 col-span-2 md:col-span-3 text-lg cursor-pointer">
       <span
         @click="$router.replace('/index?keyword=all&pn=1&type=all')"
         class="hover:text-yellow-400"
@@ -14,7 +14,16 @@
       <slot name="search_tool"><search-tool /></slot>
     </div>
     <!--  md:col-start-9 -->
-    <div class="md:col-span-3 col-span-7 text-gray-400 text-right mr-3">
+    <div
+      class="
+        md:col-span-3
+        md:text-base
+        text-sm
+        col-span-8
+        text-gray-400 text-right
+        mr-3
+      "
+    >
       <span
         @click="window.open('http://121.5.133.245/')"
         class="hover:text-blue-400 cursor-pointer"
