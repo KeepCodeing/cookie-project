@@ -25,6 +25,7 @@
           leading-none
           border-2 border-gray-200
           inline-flex
+          whitespace-nowrap
           justify-center
           rounded-full
         "
@@ -111,6 +112,7 @@
         class="
           col-span-1
           ml-2
+          whitespace-nowrap
           text-white
           rounded-full
           text-sm
