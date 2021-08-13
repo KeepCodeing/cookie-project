@@ -210,7 +210,7 @@ export default defineComponent({
               {
                 timeout: 1000,
                 type: "成功",
-                message: "登陆成功！用户进来了！",
+                message: "登陆成功！",
                 show: true,
               },
               store
@@ -225,7 +225,7 @@ export default defineComponent({
         showMessageBox(
           {
             timeout: 1500,
-            message: "喂kora，有填写完字段吗？",
+            message: "请填写用户名和密码！",
             type: "错误",
             show: true,
           },

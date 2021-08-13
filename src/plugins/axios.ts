@@ -26,7 +26,7 @@ inc.interceptors.response.use(
           timeout: 1500,
           type: "错误",
           show: true,
-          message: "给我登陆，三回啊三回！",
+          message: "请登陆后再进行相关操作！",
         },
         store
       );
@@ -45,7 +45,7 @@ inc.interceptors.response.use(
           timeout: 1500,
           type: "错误",
           show: true,
-          message: msg ? msg : "未知错误，刷新，请w...",
+          message: msg ? msg : "未知错误，请尝试刷新！",
         },
         store
       );

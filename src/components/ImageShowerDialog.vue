@@ -541,7 +541,7 @@ export default defineComponent({
             timeout: 500,
             type: "成功",
             show: true,
-            message: "已经开始了！（指下载）",
+            message: "下载已开始！",
           },
           store
         );

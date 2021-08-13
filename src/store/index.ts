@@ -86,7 +86,7 @@ export default createStore<GlobalProp>({
           {
             timeout: 500,
             type: "成功",
-            message: "注册成功，登陆，请（懒狗）...",
+            message: "注册成功！...",
             show: true,
           },
           this
