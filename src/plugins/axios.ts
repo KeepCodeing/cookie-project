@@ -4,7 +4,8 @@ import jc from "js-cookie";
 import { showMessageBox } from "../utils/utils";
 
 const inc = axios;
-inc.defaults.baseURL = "/api";
+inc.defaults.baseURL =
+  process.env.NODE_ENV === "development" ? "/api" : "https://udkisangel.ml";
 
 inc.interceptors.request.use((config) => {
   const token = jc.get("token");
@@ -34,7 +35,7 @@ inc.interceptors.response.use(
     }
 
     if (status !== 200) {
-      let msg = '';
+      let msg = "";
       if (error.response.data.detail) {
         msg = error.response.data.detail.message;
       } else if (status === 500) {
