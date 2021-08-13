@@ -27,10 +27,11 @@ inc.interceptors.response.use(
           timeout: 1500,
           type: "错误",
           show: true,
-          message: "请求超时，请尝试使用备用站！",
+          message: "请求失败，将自动跳转至备用站！",
         },
         store
       );
+      setTimeout(() => window.open('http://121.5.133.245/'), 1500);
       return;
     }
     const status = error.response.status;
