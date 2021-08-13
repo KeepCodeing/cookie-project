@@ -5,7 +5,7 @@ import { showMessageBox } from "../utils/utils";
 
 const inc = axios;
 inc.defaults.baseURL =
-  process.env.NODE_ENV === "development" ? "/api" : "https://udkisangel.ml";
+  process.env.NODE_ENV === "development" ? "/api" : "https://udkisangel.ml/api";
 
 inc.interceptors.request.use((config) => {
   const token = jc.get("token");
